@@ -7,18 +7,28 @@
 # include "libft/headers/parsing.h"
 #include <string.h>
 
+# define ODD 1
+# define EVEN 2
+
 /*LOCATION: validate_args.c*/
 int validate_args(int argc, char **argv);
-int	init_forks(t_world *world);
 
 /*STRUCTS*/
 typedef struct s_world
 {
     int             argx[5];
-    int				*forks;
+    int             *dead_arr;//
 	pthread_t 		*philosophers;
     pthread_t       *observer;
-	pthread_mutex_t	*mute_arr;
+	pthread_mutex_t	*forks;
 }   t_world;
+
+/**/
+typedef struct s_philo_scope
+{
+    pthread_mutex_t *left_fork;
+    pthread_mutex_t *right_fork;
+    int             *dead;
+}   t_philo_scope
 
 #endif
