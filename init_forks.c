@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 13:41:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/04/28 11:32:01 by antofern         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:43:09 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	init_forks(t_world *world)
 
 static int reserve_memory(t_world *world, int num_of_forks)
 {
-	world->forks =  malloc(sizeof(pthread_mutex_t) * num_of_forks);
+	world->forks =  malloc(sizeof(pthread_mutex_t *) * num_of_forks);
 	if (world->forks ==NULL)
 		return (1);
 	return (0);

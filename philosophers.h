@@ -17,18 +17,21 @@ int validate_args(int argc, char **argv);
 typedef struct s_world
 {
     int             argx[5];
-    int             *dead_arr;//
-	pthread_t 		*philosophers;
+    long long       *dead_arr;//
+	pthread_t 		**philosophers;
     pthread_t       *observer;
-	pthread_mutex_t	*forks;
+	pthread_mutex_t	**forks;
+    int             *the_end;
 }   t_world;
 
-/**/
 typedef struct s_philo_scope
 {
+    int             name;
+    int             *argx;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
-    int             *dead;
-}   t_philo_scope
+    long long       *dead;
+    int             *the_end;
+}   t_philo_scope;
 
 #endif
