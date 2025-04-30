@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/04/29 14:16:16 by antofern         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:17:51 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ int main(int argc, char **argv)
 
 int	simulation(t_world *world)
 {
-	if(init_forks(world))
+	if(create_mutexes(world))
 		return(1); //sale limpio
-	if(init_observer(world))
-		return(2);//destruir mutex, liberar world->forks,
 	if (init_philosophers(world))
 		return (3);
+	if(init_observer(world))
+		return(2);//destruir mutex, liberar world->forks,
 	return(0);
 }
 

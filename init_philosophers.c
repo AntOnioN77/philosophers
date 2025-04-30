@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/04/29 17:46:00 by antofern         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:10:52 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int reserve_memory(t_world *world, int num_of_philos)
 	if (world->philosophers ==NULL)
 		return (1);
 	world->dead_arr =  malloc(sizeof(int) * num_of_philos);
-	if (world->dead_arr ==NULL)
+	if (world->dead_arr == NULL)
 	{
 		free(world->philosophers);
 		return (1);
@@ -89,7 +89,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n)
 {
 	t_philo_scope	*scope;
 
-	scope = malloc(sizeof(t_philo_scope *));
+	scope = malloc(sizeof(t_philo_scope));
 	if (scope == NULL)
 		return (NULL);
 	scope->name = philo_n + 1;
@@ -97,7 +97,9 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n)
 	scope->left_fork = find_left_fork(world->forks, philo_n, world->argx[0]);
 	scope->right_fork = world->forks[philo_n];
 	scope->dead = world->dead_arr[philo_n];
+	scope->dead_mutex = world->dead_mutex[philo_n];
 	scope->the_end = world->the_end;
+	scope->mutex_end = &(world->mutex_end);
 	return (scope);
 }
 
@@ -110,42 +112,3 @@ pthread_t	*find_left_fork(pthread_t **forks, int philo_n, int total_philo)
 	else
 		return (forks[philo_n -1]);
 }
-
-void *even_philo(void *sc)
-{
-	t_philo_scope	*scope;
-	int				eats;
-
-	eats = 0;
-	scope = (t_philo_scope *)sc;
-	monitor(scope->name, "is thinking");
-	while(!scope->the_end)
-	{
-		ptread_mutex_lock(scope->right_fork);
-		gettimeofday();//
-		if(monitor(scope->name, "has taken a fork"))
-			return (sc);
-		ptread_mutex_lock(scope->left_fork);
-		gettimeofday();//
-		*(scope->dead) = date_of_die();
-		if(monitor(scope->name, "has taken a fork"))
-			return (sc);
-		if(monitor(scope->name, "is eating"))
-			return (sc);
-		eats++;
-		usleep(scope->argx[2] / 1000);
-		ptread_mutex_unlock(scope->left_fork);
-		ptread_mutex_lock(scope->right_fork);
-		if(monitor(scope->name, "is sleeping"))
-			return (sc);
-		usleep(scope->argx[3] / 1000);
-		if(eats >= scope->argx[4])
-			return (sc);
-		if(monitor(scope->name, "is thinking"))
-			return (sc);
-	}
-}
-
-
-
-
