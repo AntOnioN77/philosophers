@@ -20,11 +20,11 @@ void *even_philo(void *sc);
 typedef struct s_world
 {
 	int             argx[5];
-	long long       *dead_arr;//
-	pthread_mutex_t	*dead_mutex;// array
-	pthread_t 		*philosophers;// array
+	long long       *dead_arr;		// array
+	pthread_mutex_t	*dead_mutex;	// array
+	pthread_t 		*philosophers;	// array
 	pthread_t       *observer;
-	pthread_mutex_t	*forks; // array
+	pthread_mutex_t	*forks;			// array
 	pthread_mutex_t mutex_end;
 	int             the_end;
 }   t_world;
