@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_forks.c                                       :+:      :+:    :+:   */
+/*   create_mutexes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 13:41:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/04/30 15:56:25 by antofern         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:42:37 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ int	create_mutexes(t_world *world)
 
 static int reserve_memory(t_world *world, int num_of_philos)
 {
-	world->forks =  malloc(sizeof(pthread_mutex_t *) * num_of_philos);
+	world->forks =  malloc(sizeof(pthread_mutex_t) * num_of_philos);
 	if (world->forks ==NULL)
 		return (1);
-	world->dead_mutex = malloc(sizeof(pthread_mutex_t *) * num_of_philos);
+	world->dead_mutex = malloc(sizeof(pthread_mutex_t) * num_of_philos);
 	if (world->dead_mutex ==NULL)
 	{
 		free(world->forks);
