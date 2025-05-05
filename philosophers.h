@@ -15,13 +15,14 @@
 /*LOCATION: validate_args.c*/
 int validate_args(int argc, char **argv);
 void *even_philo(void *sc);
+void *odd_philo(void *sc);
 
 /*STRUCTS*/
 typedef struct s_world
 {
 	int             argx[5];
 	long long       *dead_arr;		// array
-	pthread_mutex_t	*dead_mutex;	// array
+	pthread_mutex_t	*dead_mutex_arr;	// array
 	pthread_t 		*philosophers;	// array
 	pthread_t       *observer;
 	pthread_mutex_t	*forks;			// array
