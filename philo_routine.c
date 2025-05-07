@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/07 17:17:42 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:48:33 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,18 @@ void *even_philo(void *sc)
 		pthread_mutex_unlock(scope->mutex_end);
 
         //take first fork
-		ptread_mutex_lock(scope->right_fork);
+		pthread_mutex_lock(scope->right_fork);
 		if(monitor(scope,  start_time, "has taken a fork"))
 		{
-			ptread_mutex_unlock(scope->right_fork);
+			pthread_mutex_unlock(scope->right_fork);
 			return (sc);
 		}
         //take second fork
-		ptread_mutex_lock(scope->left_fork);
+		pthread_mutex_lock(scope->left_fork);
 		if(monitor(scope,  start_time, "has taken a fork"))
 		{
-			ptread_mutex_unlock(scope->left_fork);
-			ptread_mutex_unlock(scope->right_fork);
+			pthread_mutex_unlock(scope->left_fork);
+			pthread_mutex_unlock(scope->right_fork);
 			return (sc);
 		}
         //and eat
@@ -54,14 +54,14 @@ void *even_philo(void *sc)
 		pthread_mutex_unlock(scope->dead_mutex);      		//-MU
 		if(monitor(scope,  start_time, "is eating"))
 		{
-			ptread_mutex_unlock(scope->left_fork);
-			ptread_mutex_unlock(scope->right_fork);
+			pthread_mutex_unlock(scope->left_fork);
+			pthread_mutex_unlock(scope->right_fork);
 			return (sc);
 		}
 		eats++;
 		usleep(scope->argx[2] * 1000);
-		ptread_mutex_unlock(scope->left_fork);
-		ptread_mutex_unlock(scope->right_fork);
+		pthread_mutex_unlock(scope->left_fork);
+		pthread_mutex_unlock(scope->right_fork);
         //duerme y piensa
 		if(monitor(scope,  start_time, "is sleeping"))
 			return (sc);
@@ -73,8 +73,8 @@ void *even_philo(void *sc)
 		
 		pthread_mutex_lock(scope->mutex_end);
 	}
-	free(sc);
-	return (NULL);
+	pthread_mutex_unlock(scope->mutex_end);
+	return (sc);
 }
 
 //MOOK
@@ -137,10 +137,10 @@ void *odd_philo(void *sc)
 			return (sc);
 		
 		pthread_mutex_lock(scope->mutex_end);
+		}
+		pthread_mutex_unlock(scope->mutex_end);
+		return (sc);
 	}
-	free(sc);
-	return (NULL);
-}
 
 
 long long	get_time_ms(void)

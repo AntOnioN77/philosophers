@@ -17,6 +17,8 @@ int validate_args(int argc, char **argv);
 void *even_philo(void *sc);
 void *odd_philo(void *sc);
 
+void	destroy_arr_mutex(pthread_mutex_t forks[], int count);
+
 /*STRUCTS*/
 typedef struct s_world
 {
