@@ -6,16 +6,16 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 13:41:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/05 17:18:03 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:08:34 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static int reserve_memory(t_world *world, int num_of_philos);
+static int	reserve_memory(t_world *world, int num_of_philos);
 static int	init_mutex(t_world *world, int num_of_philos);
-static void	panic_destroy_mutex(pthread_mutex_t forks[], int count);
-int	init_forks(t_world *world, int num_of_philos);
+void		destroy_all_mutex(pthread_mutex_t forks[], int count);
+int			init_forks(t_world *world, int num_of_philos);
 
 int	create_mutexes(t_world *world)
 {
@@ -59,16 +59,16 @@ static int	init_mutex(t_world *world, int num_of_philos)
 	{
 		if(pthread_mutex_init(&(world->dead_mutex_arr[i]), NULL))
 		{
-			panic_destroy_mutex(world->forks, num_of_philos);
-			panic_destroy_mutex(world->dead_mutex_arr, i);
+			destroy_all_mutex(world->forks, num_of_philos);
+			destroy_all_mutex(world->dead_mutex_arr, i);
 			return (1);
 		}
 		i++;
 	}
 	if(pthread_mutex_init(&(world->mutex_end), NULL))
 		{
-			panic_destroy_mutex(world->forks, num_of_philos);
-			panic_destroy_mutex(world->dead_mutex_arr, i);
+			destroy_all_mutex(world->forks, num_of_philos);
+			destroy_all_mutex(world->dead_mutex_arr, i);
 			return (1);
 		}
 	return (0);
@@ -83,7 +83,7 @@ int	init_forks(t_world *world, int num_of_philos)
 	{
 		if(pthread_mutex_init(&(world->forks[i]), NULL))
 		{
-			panic_destroy_mutex(world->forks, i);
+			destroy_all_mutex(world->forks, i);
 			return (1);
 		}
 		i++;
@@ -91,7 +91,7 @@ int	init_forks(t_world *world, int num_of_philos)
 	return (0);
 }
 
-static void	panic_destroy_mutex(pthread_mutex_t forks[], int count)
+void	destroy_all_mutex(pthread_mutex_t forks[], int count)
 {
 	while(count > 0)
 	{

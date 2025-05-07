@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/04/30 14:17:51 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:19:18 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,50 @@ int	simulation(t_world *world)
 	return(0);
 }
 
+void	thread_join_all(pthread_t philosophers[], int n)
+{
+	//void *tread_ret;
+	n--;
+	while (n >= 0)
+	{
+		pthread_join(philosophers[n], NULL);//&tread_ret);
+//		free(tread_ret); //libera scoope, innecesario, libero en even/odd_philo
+	}
+}
+
 int	free_simulated_world(int sim_ret, t_world *world)
 {
-	
+	if(1)//si falla create_mutexes
+	//to do: NADA?
 
+	if(3)//si falla init_philosophers
+	{
+		//liberar y destruir mutexes (dead_mutex_arr, forks) y mutex_end (que no requiere ser liberado)
+	}
+
+	if(2)//si falla init_observer
+	{
+		//liberar mutexes
+		//liberar philos
+		thread_join_all(world->philosophers, world->argx[0]);
+		free(world->philosophers);
+	}
+
+	if(0)//ejecucion normal no errores
+	{
+		//liberar philos y observer
+		thread_join_all(world->philosophers, world->argx[0]);
+		pthread_join(world->observer, NULL);
+		free(world->philosophers);
+
+		//liberar mutexes
+		destroy_all_mutex(world->forks, world->argx[0]);
+		free(world->forks);
+		destroy_all_mutex(world->dead_mutex_arr, world->argx[0]);
+		free(world->dead_mutex_arr);
+		pthread_mutex_destroy(&(world->mutex_end));
+		//
+	}
 }
 
 int	init_observer()

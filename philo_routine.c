@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/05 16:45:57 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:17:42 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ void *even_philo(void *sc)
 		
 		pthread_mutex_lock(scope->mutex_end);
 	}
+	free(sc);
+	return (NULL);
 }
 
 //MOOK
@@ -136,6 +138,8 @@ void *odd_philo(void *sc)
 		
 		pthread_mutex_lock(scope->mutex_end);
 	}
+	free(sc);
+	return (NULL);
 }
 
 

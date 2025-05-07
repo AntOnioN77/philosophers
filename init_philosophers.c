@@ -6,43 +6,49 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/05 17:19:13 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:44:57 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	init_one_philo(t_world *world, unsigned int philo_n, int type);
-static int reserve_memory(t_world *world, int num_of_philos);
+int			init_one_philo(t_world *world, unsigned int philo_n, int type);
+static int	reserve_memory(t_world *world, int num_of_philos);
 
-int init_philosophers(t_world *world)
+int	init_philosophers(t_world *world)
 {
 	unsigned int	n_philos;
 	unsigned int	current;
 	int				error;
 
 	n_philos = world->argx[0];
-	if(reserve_memory(world, n_philos))
+	if (reserve_memory(world, n_philos))
 		return (1);
 	current = 1;
 	error = 0;
-	while(current <= n_philos)
+	while (current <= n_philos)
 	{
-		if((current % 2) == 0)
+		if ((current % 2) == 0)
 			error = init_one_philo(world, current, EVEN);
 		else
 			error = init_one_philo(world, current, ODD);
-		current++;
-		if(error)
+		if (error)
 		{
 			world->the_end = 1;
-			return(error);
+			current--;
+			while (current > 0)
+				pthread_join(world->philosophers[current -1], NULL);
+			free(world->philosophers);
+			free(world->dead_arr);
+			return (error);
 		}
+		current++;
+	
 	}
 	return (0);
 }
 
-static int reserve_memory(t_world *world, int num_of_philos)
+static int	reserve_memory(t_world *world, int num_of_philos)
 {
 	world->philosophers =  malloc(sizeof(pthread_t) * num_of_philos);
 	if (world->philosophers ==NULL)
@@ -96,9 +102,9 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n)
 	scope->argx = world->argx;
 	scope->left_fork = find_left_fork(world->forks, philo_n, world->argx[0]);
 	scope->right_fork = &(world->forks[philo_n]);
-	scope->dead = world->dead_arr[philo_n];
+	scope->dead = &(world->dead_arr[philo_n]);
 	scope->dead_mutex = &(world->dead_mutex_arr[philo_n]);
-	scope->the_end = world->the_end;
+	scope->the_end = &(world->the_end);
 	scope->mutex_end = &(world->mutex_end);
 	return (scope);
 }
