@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 18:01:15 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 19:37:21 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 # include <pthread.h>
 # include <unistd.h>
+#include <stdlib.h>
 //# include "libft/headers/libft.h"
 //# include "libft/headers/parsing.h"
 # include <string.h>
@@ -29,18 +30,6 @@ typedef int	t_bool;
 
 # define ODD 1
 # define EVEN 2
-
-/*LOCATION: validate_args.c*/
-int validate_args(int argc, char **argv);
-void *philo_routine(void *sc);
-
-long	ft_atol(const char *str);
-
-char	*cmpmsg(long long *start, long long time, unsigned int name, char *msg);
-long long	get_time_ms(void);
-void	destroy_arr_mutex(pthread_mutex_t forks[], unsigned int count);
-t_bool	valid_amount_ms(char *num);
-t_bool	is_in_bounds_uint(char *num);
 
 enum	e_argx
 {
@@ -69,7 +58,7 @@ typedef struct s_philo_scope
 {
 	int				name;
 
-	int				*argx;
+	unsigned int	*argx;
 	pthread_mutex_t	*first_fork;
 	pthread_mutex_t	*second_fork;
 	long long		*birth_date;
@@ -78,5 +67,20 @@ typedef struct s_philo_scope
 	int				*the_end;
 	pthread_mutex_t *mutex_end;
 }   t_philo_scope;
+
+/*LOCATION: validate_args.c*/
+int validate_args(int argc, char **argv);
+void *philo_routine(void *sc);
+
+void    *observer_routine(void *world);
+long	ft_atol(const char *str);
+
+char	*cmpmsg(long long *start, long long time, unsigned int name, char *msg);
+long long	get_time_ms(void);
+void	destroy_arr_mutex(pthread_mutex_t forks[], unsigned int count);
+t_bool	valid_amount_ms(char *num);
+t_bool	is_in_bounds_uint(char *num);
+t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n);
+pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n, unsigned int total_philo);
 
 #endif

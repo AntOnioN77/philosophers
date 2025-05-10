@@ -6,11 +6,12 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 17:42:03 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 19:11:39 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
 int     init_philosophers(argx);
 int    parse_args(int argc, char *argv[], unsigned int argx[]);
 
@@ -32,8 +33,8 @@ int	simulation(t_world *world)
 		return(1); //sale limpio
 	if (init_philosophers(world))
 		return (3);
-	if(init_observer(world))
-		return(2);//destruir mutex, liberar world->forks,
+	if(pthread_create(&(world->observer), NULL, observer_routine, world))
+		return(2);
 	return(0);
 }
 
@@ -59,6 +60,7 @@ void	destroy_mutexes(t_world *world)
 
 int	free_simulated_world(int sim_ret, t_world *world)
 {
+
 	//if(sim_ret = 1)//si falla create_mutexes
 		//to do: NADA?
 	if(sim_ret = 3)//si falla init_philosophers
@@ -68,6 +70,7 @@ int	free_simulated_world(int sim_ret, t_world *world)
 		//liberar philos
 		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
 		free(world->philosophers);
+		free(world->birth_date_arr);
 		//liberar mutexes
 		destroy_mutexes(world);
 	}
@@ -78,6 +81,8 @@ int	free_simulated_world(int sim_ret, t_world *world)
 		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
 
 		free(world->philosophers);
+
+		free(world->birth_date_arr);
 		//liberar mutexes
 		destroy_mutexes(world);
 		return(0);
@@ -85,8 +90,6 @@ int	free_simulated_world(int sim_ret, t_world *world)
 	return(1);
 }
 
-int	init_observer()
-{}
 
 int    parse_args(int argc, char *argv[], unsigned int argx[])
 {

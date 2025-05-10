@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 13:41:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 16:49:40 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 19:26:22 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	reserve_memory(t_world *world, int num_of_philos);
 static int	init_mutex(t_world *world, int num_of_philos);
 void		destroy_arr_mutex(pthread_mutex_t forks[], unsigned int count);
-int			init_forks(t_world *world, int num_of_philos);
+int			init_forks(t_world *world, unsigned int num_of_philos);
 
 int	create_mutexes(t_world *world)
 {
@@ -74,7 +74,7 @@ static int	init_mutex(t_world *world, int num_of_philos)
 	return (0);
 }
 
-int	init_forks(t_world *world, int num_of_philos)
+int	init_forks(t_world *world, unsigned int num_of_philos)
 {	
 	unsigned int	i;
 

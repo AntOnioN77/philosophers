@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 16:47:13 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 19:45:28 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,10 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 
 }
 
-void	stablish_order_forks(t_philo_scope *scope, pthread_mutex_t *left,
+void	stablish_order_forks(unsigned int n, t_philo_scope *scope, pthread_mutex_t *left,
 	pthread_mutex_t *rigth)
 {
-	if ((scope->name % 2) == 0)
+	if ((n % 2) == 0)
 	{
 		scope->first_fork = left;
 		scope->second_fork = rigth;
@@ -105,7 +105,7 @@ void	stablish_order_forks(t_philo_scope *scope, pthread_mutex_t *left,
 	}
 }
 
-t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n)
+t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 {
 	t_philo_scope	*scope;
 	pthread_mutex_t	*left;
@@ -119,7 +119,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n)
 	left= find_left_fork(world->forks, philo_n, world->argx[NUM_OF_PHILO]);
 	rigth = &(world->forks[philo_n]);
 
-	stablish_order_forks(world, left, rigth);
+	stablish_order_forks(philo_n, scope, left, rigth);
 
 	scope->dead_date = &(world->dead_date_arr[philo_n]);
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
@@ -128,7 +128,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n)
 	return (scope);
 }
 
-pthread_t	*find_left_fork(pthread_t *forks, int philo_n, unsigned int total_philo)
+pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n, unsigned int total_philo)
 {
 	if(total_philo == 1)
 		return (NULL);
