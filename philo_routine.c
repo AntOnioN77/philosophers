@@ -6,25 +6,28 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 13:32:07 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 18:03:47 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 //MOOK
-void *odd_philo(void *sc)
+void *philo_routine(void *sc)
 {
 	t_philo_scope	*scope;
-	int				eats;
+	unsigned int	eats;
     long long       start_time;
 
     //start
+
+	pthread_mutex_lock(scope->dead_date_mutex);       //-ML
 	eats = 0;
 	scope = (t_philo_scope *)sc;
-    start_time = get_time_ms();
-	pthread_mutex_lock(scope->dead_date_mutex);       //-ML
-    *(scope->dead_date) = start_time + scope->argx[1];//
+
+	*(scope->birth_date) = get_time_ms();
+    start_time = *(scope->birth_date);
+    *(scope->dead_date) = start_time + scope->argx[TIME_TO_DIE];//
 	pthread_mutex_unlock(scope->dead_date_mutex);	 //-MU
 	monitor(scope,  start_time, "is thinking");
 
@@ -47,7 +50,7 @@ void *odd_philo(void *sc)
 		}
         //and eat
 		pthread_mutex_lock(scope->dead_date_mutex);		 		// -ML
-        *(scope->dead_date) = *(scope->dead_date) + scope->argx[1];	//
+        *(scope->dead_date) = *(scope->dead_date) + scope->argx[TIME_TO_DIE];	//
 		pthread_mutex_unlock(scope->dead_date_mutex);      		//-MU
 		if(monitor(scope,  start_time, "is eating"))
 		{
@@ -56,14 +59,14 @@ void *odd_philo(void *sc)
 			return (sc);
 		}
 		eats++;
-		usleep(scope->argx[2] * 1000);
+		usleep(scope->argx[TIME_TO_EAT] * 1000);
 		pthread_mutex_unlock(scope->first_fork);
 		pthread_mutex_unlock(scope->second_fork);
         //duerme y piensa
 		if(monitor(scope,  start_time, "is sleeping"))
 			return (sc);
-		usleep(scope->argx[3] * 1000);
-		if(eats >= scope->argx[4])
+		usleep(scope->argx[TIME_TO_SLEEP] * 1000);
+		if(eats >= scope->argx[MAX_EATS])
 			return (sc);
 		if(monitor(scope,  start_time, "is thinking"))
 			return (sc);
@@ -100,7 +103,7 @@ int	monitor(t_philo_scope *scp, long long *start, char *msg)
 	if(good_bye != 0)
 		return(1);
 
-	full_msg = cmpmsg(start, time, scp, msg);
+	full_msg = cmpmsg(start, time, scp->name, msg);
 	if (!full_msg)
 		return (1);
 	ft_putstr_fd(full_msg, 1);
@@ -124,14 +127,14 @@ char	*join_check(char *str_a, char *str_b, char **result)
 	return(*result);
 }
 
-char	*cmpmsg(long long *start, long long time, t_philo_scope *scp, char *msg)
+char	*cmpmsg(long long *start, long long time, unsigned int name, char *msg)
 {
 	char		*full_msg;
 	char		*aux;
 	char		*name;
 
 	time = time - *start;
-	if(time > INT_MAX || scp->name > INT_MAX);
+	if(time > INT_MAX || name > INT_MAX);
 		return(NULL);
 	aux = ft_itoa(time);
 	if(aux == NULL)
@@ -139,7 +142,7 @@ char	*cmpmsg(long long *start, long long time, t_philo_scope *scp, char *msg)
 	if(!join_check(aux, " ", full_msg))
 		return (NULL);
 	free(aux);
-	name = ft_itoa(scp->name);
+	name = ft_itoa(name);//CUIDADO DESBORDA!!!!!!!!!!!!!!
 	if(name == NULL)
 		return(NULL);
 	if(!join_check(full_msg, name, aux))

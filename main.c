@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/08 17:42:25 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:42:03 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	simulation(t_world *world)
 	return(0);
 }
 
-void	thread_join_all(pthread_t philosophers[], int n)
+void	thread_join_all(pthread_t philosophers[], unsigned int n)
 {
 	void *tread_ret;
 	n--;
@@ -50,10 +50,10 @@ void	thread_join_all(pthread_t philosophers[], int n)
 
 void	destroy_mutexes(t_world *world)
 {
-	destroy_arr_mutex(world->forks, world->argx[0]);
+	destroy_arr_mutex(world->forks, world->argx[NUM_OF_PHILO]);
 	free(world->forks);
-	destroy_arr_mutex(world->dead_mutex_arr, world->argx[0]);
-	free(world->dead_mutex_arr);
+	destroy_arr_mutex(world->dead_date_mutex_arr, world->argx[NUM_OF_PHILO]);
+	free(world->dead_date_mutex_arr);
 	pthread_mutex_destroy(&(world->mutex_end));
 }
 
@@ -66,7 +66,7 @@ int	free_simulated_world(int sim_ret, t_world *world)
 	if(sim_ret = 2)//si falla init_observer
 	{
 		//liberar philos
-		thread_join_all(world->philosophers, world->argx[0]);
+		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
 		free(world->philosophers);
 		//liberar mutexes
 		destroy_mutexes(world);
@@ -75,7 +75,7 @@ int	free_simulated_world(int sim_ret, t_world *world)
 	{
 		//liberar philos y observer
 		pthread_join(world->observer, NULL);//el observer debe terminar ¿antes? que los philosofos
-		thread_join_all(world->philosophers, world->argx[0]);
+		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
 
 		free(world->philosophers);
 		//liberar mutexes
@@ -93,12 +93,14 @@ int    parse_args(int argc, char *argv[], unsigned int argx[])
 	int i;
 
 	if (validate_args(argc, argv))
-	return (1);
+		return (1);
 	i = 0;
-	while(i < 5)
+	while(i < 4)
 	{
 		argx[i] = ft_atol(argv[i+1]);
 		i++;
 	}
+	if(argc == 6)
+		argx[4] = ft_atol(argv[5]);
 	return(0);
 }
