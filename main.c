@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/07 17:45:40 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/08 17:42:25 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ void	destroy_mutexes(t_world *world)
 
 int	free_simulated_world(int sim_ret, t_world *world)
 {
-	if(1)//si falla create_mutexes
-	//to do: NADA?
-	if(3)//si falla init_philosophers
+	//if(sim_ret = 1)//si falla create_mutexes
+		//to do: NADA?
+	if(sim_ret = 3)//si falla init_philosophers
 		destroy_mutexes(world);
-	if(2)//si falla init_observer
+	if(sim_ret = 2)//si falla init_observer
 	{
 		//liberar philos
 		thread_join_all(world->philosophers, world->argx[0]);
@@ -71,11 +71,12 @@ int	free_simulated_world(int sim_ret, t_world *world)
 		//liberar mutexes
 		destroy_mutexes(world);
 	}
-	if(0)//ejecucion normal no errores
+	if(sim_ret = 0)//ejecucion normal no errores
 	{
 		//liberar philos y observer
+		pthread_join(world->observer, NULL);//el observer debe terminar ¿antes? que los philosofos
 		thread_join_all(world->philosophers, world->argx[0]);
-		pthread_join(world->observer, NULL);
+
 		free(world->philosophers);
 		//liberar mutexes
 		destroy_mutexes(world);

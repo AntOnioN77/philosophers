@@ -36,10 +36,10 @@ typedef struct s_philo_scope
 {
 	int				name;
 	int				*argx;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	long long		*dead;
-	pthread_mutex_t	*dead_mutex;
+	pthread_mutex_t	*first_fork;
+	pthread_mutex_t	*second_fork;
+	long long		*dead_date;
+	pthread_mutex_t	*dead_date_mutex;
 	int				*the_end;
 	pthread_mutex_t *mutex_end;
 }   t_philo_scope;

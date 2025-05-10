@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/07 16:44:57 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:27:13 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,37 +73,31 @@ int	init_one_philo(t_world *world, unsigned int philo_n, int type)
 
 	philo_n--;
 
-	scope = scoop_of_this_philo(world, philo_n);
+	scope = scoop_of_this_philo(world, philo_n, type);
 	if( scope == NULL)
-		return (1);// 
+		return (1);
 	new_philo = &(world->philosophers[philo_n]);
-	if(type == EVEN)
-	{	
 		if(pthread_create(new_philo, NULL, even_philo, scope))
 			return (1);
-	}
-	else
-	{
-		if(pthread_create(new_philo, NULL, odd_philo, scope))
-			return (1);
-	}
 	return (0);
 
 }
 
-t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n)
+t_philo_scope	*scoop_of_this_philo(t_world *world, int philo_n, int type)
 {
 	t_philo_scope	*scope;
+	pthread_mutex_t	*left;
+	pthread_mutex_t	*rigth;
 
 	scope = malloc(sizeof(t_philo_scope));
 	if (scope == NULL)
 		return (NULL);
 	scope->name = philo_n + 1;
 	scope->argx = world->argx;
-	scope->left_fork = find_left_fork(world->forks, philo_n, world->argx[0]);
-	scope->right_fork = &(world->forks[philo_n]);
-	scope->dead = &(world->dead_arr[philo_n]);
-	scope->dead_mutex = &(world->dead_mutex_arr[philo_n]);
+	left= find_left_fork(world->forks, philo_n, world->argx[0]);
+	rigth = &(world->forks[philo_n]);
+	scope->dead_date = &(world->dead_arr[philo_n]);
+	scope->dead_date_mutex = &(world->dead_mutex_arr[philo_n]);
 	scope->the_end = &(world->the_end);
 	scope->mutex_end = &(world->mutex_end);
 	return (scope);

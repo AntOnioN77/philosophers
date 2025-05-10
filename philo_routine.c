@@ -6,76 +6,11 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/07 17:48:33 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:32:07 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-
-void *even_philo(void *sc)
-{
-	t_philo_scope	*scope;
-	int				eats;
-    long long       start_time;
-
-    //start
-	eats = 0;
-	scope = (t_philo_scope *)sc;
-    start_time = get_time_ms();
-	pthread_mutex_lock(scope->dead_mutex);       //-ML
-    *(scope->dead) = start_time + scope->argx[1];//
-	pthread_mutex_unlock(scope->dead_mutex);	 //-MU
-	monitor(scope,  start_time, "is thinking");
-
-	pthread_mutex_lock(scope->mutex_end);
-	while(!scope->the_end)
-	{
-		pthread_mutex_unlock(scope->mutex_end);
-
-        //take first fork
-		pthread_mutex_lock(scope->right_fork);
-		if(monitor(scope,  start_time, "has taken a fork"))
-		{
-			pthread_mutex_unlock(scope->right_fork);
-			return (sc);
-		}
-        //take second fork
-		pthread_mutex_lock(scope->left_fork);
-		if(monitor(scope,  start_time, "has taken a fork"))
-		{
-			pthread_mutex_unlock(scope->left_fork);
-			pthread_mutex_unlock(scope->right_fork);
-			return (sc);
-		}
-        //and eat
-		pthread_mutex_lock(scope->dead_mutex);		 		// -ML
-        *(scope->dead) = *(scope->dead) + scope->argx[1];	//
-		pthread_mutex_unlock(scope->dead_mutex);      		//-MU
-		if(monitor(scope,  start_time, "is eating"))
-		{
-			pthread_mutex_unlock(scope->left_fork);
-			pthread_mutex_unlock(scope->right_fork);
-			return (sc);
-		}
-		eats++;
-		usleep(scope->argx[2] * 1000);
-		pthread_mutex_unlock(scope->left_fork);
-		pthread_mutex_unlock(scope->right_fork);
-        //duerme y piensa
-		if(monitor(scope,  start_time, "is sleeping"))
-			return (sc);
-		usleep(scope->argx[3] * 1000);
-		if(eats >= scope->argx[4])
-			return (sc);
-		if(monitor(scope,  start_time, "is thinking"))
-			return (sc);
-		
-		pthread_mutex_lock(scope->mutex_end);
-	}
-	pthread_mutex_unlock(scope->mutex_end);
-	return (sc);
-}
 
 //MOOK
 void *odd_philo(void *sc)
@@ -88,45 +23,42 @@ void *odd_philo(void *sc)
 	eats = 0;
 	scope = (t_philo_scope *)sc;
     start_time = get_time_ms();
-	pthread_mutex_lock(scope->dead_mutex);       //-ML
-    *(scope->dead) = start_time + scope->argx[1];//
-	pthread_mutex_unlock(scope->dead_mutex);	 //-MU
+	pthread_mutex_lock(scope->dead_date_mutex);       //-ML
+    *(scope->dead_date) = start_time + scope->argx[1];//
+	pthread_mutex_unlock(scope->dead_date_mutex);	 //-MU
 	monitor(scope,  start_time, "is thinking");
 
-	pthread_mutex_lock(scope->mutex_end);
-	while(!scope->the_end)
+	while(1)
 	{
-		pthread_mutex_unlock(scope->mutex_end);
-
         //take first fork
-		ptread_mutex_lock(scope->left_fork);
+		pthread_mutex_lock(scope->first_fork);
 		if(monitor(scope,  start_time, "has taken a fork"))
 		{
-			ptread_mutex_unlock(scope->left_fork);
+			pthread_mutex_unlock(scope->first_fork);
 			return (sc);
 		}
         //take second fork
-		ptread_mutex_lock(scope->right_fork);
+		pthread_mutex_lock(scope->second_fork);
 		if(monitor(scope,  start_time, "has taken a fork"))
 		{
-			ptread_mutex_unlock(scope->left_fork);
-			ptread_mutex_unlock(scope->right_fork);
+			pthread_mutex_unlock(scope->first_fork);
+			pthread_mutex_unlock(scope->second_fork);
 			return (sc);
 		}
         //and eat
-		pthread_mutex_lock(scope->dead_mutex);		 		// -ML
-        *(scope->dead) = *(scope->dead) + scope->argx[1];	//
-		pthread_mutex_unlock(scope->dead_mutex);      		//-MU
+		pthread_mutex_lock(scope->dead_date_mutex);		 		// -ML
+        *(scope->dead_date) = *(scope->dead_date) + scope->argx[1];	//
+		pthread_mutex_unlock(scope->dead_date_mutex);      		//-MU
 		if(monitor(scope,  start_time, "is eating"))
 		{
-			ptread_mutex_unlock(scope->left_fork);
-			ptread_mutex_unlock(scope->right_fork);
+			pthread_mutex_unlock(scope->first_fork);
+			pthread_mutex_unlock(scope->second_fork);
 			return (sc);
 		}
 		eats++;
 		usleep(scope->argx[2] * 1000);
-		ptread_mutex_unlock(scope->left_fork);
-		ptread_mutex_unlock(scope->right_fork);
+		pthread_mutex_unlock(scope->first_fork);
+		pthread_mutex_unlock(scope->second_fork);
         //duerme y piensa
 		if(monitor(scope,  start_time, "is sleeping"))
 			return (sc);
@@ -135,12 +67,9 @@ void *odd_philo(void *sc)
 			return (sc);
 		if(monitor(scope,  start_time, "is thinking"))
 			return (sc);
-		
-		pthread_mutex_lock(scope->mutex_end);
-		}
-		pthread_mutex_unlock(scope->mutex_end);
-		return (sc);
 	}
+	return (sc);
+}
 
 
 long long	get_time_ms(void)
@@ -154,19 +83,23 @@ long long	get_time_ms(void)
 int	monitor(t_philo_scope *scp, long long *start, char *msg)
 {
 	long long		time;
-	int				the_end;
+	int				good_bye;
 	char			*full_msg;
 
 	time = get_time_ms();
 
 	pthread_mutex_lock(scp->mutex_end);
-	the_end = scp->the_end;
+	good_bye = scp->the_end;
 	pthread_mutex_unlock(scp->mutex_end);
 
-	pthread_mutex_lock(scp->dead_mutex);
-	if(time > scp->dead || the_end != 0)// the dead debe ir muteado
+	pthread_mutex_lock(scp->dead_date_mutex);
+	if(time > scp->dead_date)
+		good_bye++;
+	pthread_mutex_unlock(scp->dead_date_mutex);
+
+	if(good_bye != 0)
 		return(1);
-	pthread_mutex_unlock(scp->dead_mutex);
+
 	full_msg = cmpmsg(start, time, scp, msg);
 	if (!full_msg)
 		return (1);
