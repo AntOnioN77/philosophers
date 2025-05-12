@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 13:41:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 19:26:22 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:51:26 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	create_mutexes(t_world *world)
 	{
 		free(world->forks);
 		free(world->dead_date_mutex_arr);
+		free(world->mutex_end_array);
 		return (1);
 	}
 
@@ -43,6 +44,13 @@ static int reserve_memory(t_world *world, int num_of_philos)
 	if (world->dead_date_mutex_arr ==NULL)
 	{
 		free(world->forks);
+		return (1);
+	}
+	world->mutex_end_array = malloc(sizeof(pthread_mutex_t) * num_of_philos);
+	if (world->mutex_end_array ==NULL)
+	{
+		free(world->forks);
+		free(world->dead_date_mutex_arr);
 		return (1);
 	}
 	return (0);
@@ -65,12 +73,18 @@ static int	init_mutex(t_world *world, int num_of_philos)
 		}
 		i++;
 	}
-	if(pthread_mutex_init(&(world->mutex_end), NULL))
-		{
-			destroy_arr_mutex(world->forks, num_of_philos);
-			destroy_arr_mutex(world->dead_date_mutex_arr, i);
-			return (1);
-		}
+	i = 0;
+	while(i < num_of_philos)
+	{
+		if(pthread_mutex_init(&(world->mutex_end_array[i]), NULL))
+			{
+				destroy_arr_mutex(world->forks, num_of_philos);
+				destroy_arr_mutex(world->dead_date_mutex_arr, num_of_philos - 1);
+				destroy_arr_mutex(world->mutex_end_array, i);
+				return (1);
+			}
+			i++;
+	}
 	return (0);
 }
 

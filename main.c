@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 13:38:06 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:54:43 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	destroy_mutexes(t_world *world)
 	free(world->forks);
 	destroy_arr_mutex(world->dead_date_mutex_arr, world->argx[NUM_OF_PHILO]);
 	free(world->dead_date_mutex_arr);
-	pthread_mutex_destroy(&(world->mutex_end));
+	destroy_arr_mutex(world->mutex_end_array, world->argx[NUM_OF_PHILO]);
+	free(world->mutex_end_array);
 }
 
 int	free_simulated_world(int sim_ret, t_world *world)

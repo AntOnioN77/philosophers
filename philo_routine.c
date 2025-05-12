@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 14:03:09 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:08:16 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void *philo_routine(void *sc)
 		}
         //and eat
 		pthread_mutex_lock(scope->dead_date_mutex);		 		// -ML
-        *(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE] * 1000);	//
+        *(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE]);	//
 		pthread_mutex_unlock(scope->dead_date_mutex);      		//-MU
 		if(monitor(scope,  start_time, " is eating\n"))
 		{
@@ -59,12 +59,18 @@ void *philo_routine(void *sc)
 		usleep(scope->argx[TIME_TO_EAT] * 1000);
 		pthread_mutex_unlock(scope->first_fork);
 		pthread_mutex_unlock(scope->second_fork);
+		if(eats >= scope->argx[MAX_EATS])
+		{
+			pthread_mutex_lock(scope->mutex_end);
+			*(scope->the_end)= 1;
+			pthread_mutex_unlock(scope->mutex_end);
+			return (sc);
+		}
         //duerme y piensa
 		if(monitor(scope,  start_time, " is sleeping\n"))
 			return (sc);
 		usleep(scope->argx[TIME_TO_SLEEP] * 1000);
-		if(eats >= scope->argx[MAX_EATS])
-			return (sc);
+
 		if(monitor(scope,  start_time, " is thinking\n"))
 			return (sc);
 		usleep(100000);//prueba BORRAR 

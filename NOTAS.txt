@@ -1,3 +1,6 @@
 usecnds_t es alias del tipo "unsigned int" 
 
 NO LIBFT
+
+formula del tiempo pensando: TIME_TO_DIE - (TIME_TO_EAT * 3 + TIME_TO_SLEEP) - (DELAY_FACTOR * NUM_OF_PHILO)
+si es negativo no hacer usleep();

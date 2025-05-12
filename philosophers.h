@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 13:46:21 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:40:30 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@ typedef int	t_bool;
 
 # define TEST 0
 
+# define DELAY_FACTOR 300
 # define FALSE 0
 # define TRUE 1
 # define ODD 1
 # define EVEN 2
+
+# define ERROR 2
 
 
 enum	e_argx
@@ -54,8 +57,8 @@ typedef struct s_world
 	long long		start_date;
 	pthread_t       observer;
 	pthread_mutex_t	*forks;			// array
-	pthread_mutex_t mutex_end;
-	int             the_end;
+	pthread_mutex_t *mutex_end_array;
+	int             *the_end_array;
 }   t_world;
 
 typedef struct s_philo_scope
@@ -92,7 +95,7 @@ char	*cmpmsg(long long start, long long time, unsigned int name, char *msg);
 long long	get_time_ms(void);
 void	destroy_arr_mutex(pthread_mutex_t forks[], unsigned int count);
 t_bool	valid_amount_ms(char *num);
-t_bool	is_in_bounds_uint(char *num);
+t_bool	is_in_bounds(char *num);
 t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n);
 pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n, unsigned int total_philo);
 

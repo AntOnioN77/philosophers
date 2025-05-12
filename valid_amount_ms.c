@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:07:40 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/11 21:42:21 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:14:28 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ t_bool	valid_amount_ms(char *num)
 	return (TRUE);
 }
 
-t_bool	is_in_bounds_uint(char *num)
+t_bool	is_in_bounds(char *num)
 {
 	long	nbr;
 	size_t	i;
@@ -97,7 +97,7 @@ t_bool	is_in_bounds_uint(char *num)
 	if (ft_strlen(num) > (size_t)(10 + sign))
 		return (FALSE);
 	nbr = ft_atol(num);
-	if (nbr > UINT_MAX || nbr < 0)
+	if (nbr > INT_MAX || nbr < 0)
 		return (FALSE);
 	return (TRUE);
 }

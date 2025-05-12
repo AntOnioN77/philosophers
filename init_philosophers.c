@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 13:44:36 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:07:10 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	init_philosophers(t_world *world)
 		error = init_one_philo(world, current);
 		if (error)
 		{
-			world->the_end = 1;
+			//world->the_end = 1 - world->argx[NUM_OF_PHILO];
 			current--;
 			while (current > 0)
 				pthread_join(world->philosophers[current -1], NULL);
@@ -56,6 +56,14 @@ static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 		free(world->philosophers);
 		return (1);
 	}
+	world->the_end_array =  malloc(sizeof(long long) * num_of_philos);
+	if (world->the_end_array == NULL)
+	{
+		free(world->philosophers);
+		free(world->dead_date_arr);
+		return (1);
+	}
+	memset(world->the_end_array, 0, sizeof(int) * num_of_philos);
 	return (0);
 }
 
@@ -70,7 +78,7 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 
 	philo_n--;
 
-	world->dead_date_arr[philo_n] = (world->argx[TIME_TO_DIE] * 1000) + world->start_date;
+	world->dead_date_arr[philo_n] = (world->argx[TIME_TO_DIE]) + world->start_date;
 	scope = scoop_of_this_philo(world, philo_n);
 	if( scope == NULL)
 		return (1);
@@ -118,8 +126,8 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 	scope->start_date = world->start_date;
 	scope->dead_date = &(world->dead_date_arr[philo_n]);
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
-	scope->the_end = &(world->the_end);
-	scope->mutex_end = &(world->mutex_end);
+	scope->the_end = &(world->the_end_array[philo_n]);
+	scope->mutex_end = &(world->mutex_end_array[philo_n]);
 	return (scope);
 }
 
