@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/11 22:31:35 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:44:36 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 
 	philo_n--;
 
+	world->dead_date_arr[philo_n] = (world->argx[TIME_TO_DIE] * 1000) + world->start_date;
 	scope = scoop_of_this_philo(world, philo_n);
 	if( scope == NULL)
 		return (1);

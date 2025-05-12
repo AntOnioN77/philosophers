@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/11 21:49:30 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:38:06 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int main(int argc, char **argv)
 
 int	simulation(t_world *world)
 {
+	world->start_date = get_time_ms();
 	if(create_mutexes(world))
 		return(1); //sale limpio
 	if (init_philosophers(world))
@@ -45,6 +46,7 @@ void	thread_join_all(pthread_t philosophers[], unsigned int n)
 	{
 		pthread_join(philosophers[n-1], &tread_ret);
 		free(tread_ret); //libera scoope, el hilo main es propietario de la memoria scoope
+		n--;
 	}
 }
 
@@ -59,7 +61,12 @@ void	destroy_mutexes(t_world *world)
 
 int	free_simulated_world(int sim_ret, t_world *world)
 {
-
+	if(TEST)
+	{
+		usleep(999999);
+		printf("*****simulation_return() = %d******\n", sim_ret);
+		fflush(NULL);
+	}
 	//if(sim_ret = 1)//si falla create_mutexes
 		//to do: NADA?
 	if(sim_ret == 3)//si falla init_philosophers

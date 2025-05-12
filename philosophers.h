@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/11 21:48:57 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:46:21 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,14 @@
 # include <stdio.h>
 
 typedef int	t_bool;
+
+# define TEST 0
+
 # define FALSE 0
 # define TRUE 1
-
 # define ODD 1
 # define EVEN 2
+
 
 enum	e_argx
 {

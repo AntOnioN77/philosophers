@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/11 22:17:23 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:03:09 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ void *philo_routine(void *sc)
 	
 	
 	scope = (t_philo_scope *)sc;
-	pthread_mutex_lock(scope->dead_date_mutex);       //-ML
 	eats = 0;
     start_time = scope->start_date;
-    *(scope->dead_date) = start_time + scope->argx[TIME_TO_DIE];//
-	pthread_mutex_unlock(scope->dead_date_mutex);	 //-MU
 	monitor(scope,  start_time, " is thinking\n");
 
 	while(1)
@@ -50,7 +47,7 @@ void *philo_routine(void *sc)
 		}
         //and eat
 		pthread_mutex_lock(scope->dead_date_mutex);		 		// -ML
-        *(scope->dead_date) = *(scope->dead_date) + scope->argx[TIME_TO_DIE];	//
+        *(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE] * 1000);	//
 		pthread_mutex_unlock(scope->dead_date_mutex);      		//-MU
 		if(monitor(scope,  start_time, " is eating\n"))
 		{
@@ -70,6 +67,7 @@ void *philo_routine(void *sc)
 			return (sc);
 		if(monitor(scope,  start_time, " is thinking\n"))
 			return (sc);
+		usleep(100000);//prueba BORRAR 
 	}
 	return (sc);
 }
