@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 19:46:09 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/11 22:20:41 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int check_survivors(t_world *world, long long *dead_date_arr, long long *birth_d
         pthread_mutex_lock(&(world->dead_date_mutex_arr[i]));
         if (dead_date_arr[i] < time)
         {
-            cmpmsg(birth_date_arr, time, 1+1, "died");
+            cmpmsg(birth_date_arr[i], time, 1+1, " died\n");
             pthread_mutex_lock(&(world->mutex_end));
             world->the_end = 1;
             pthread_mutex_unlock(&(world->mutex_end));
@@ -49,7 +49,7 @@ void    *observer_routine(void *world)
     t_world *wo;
 
     wo = world;
-    usleep(wo->argx[TIME_TO_DIE] * 500);
+    usleep(wo->argx[TIME_TO_DIE] * 250);
     while(1)
     {
         if(check_survivors(wo, wo->dead_date_arr, wo->birth_date_arr))      

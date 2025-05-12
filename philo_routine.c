@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 18:03:47 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/11 22:17:23 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,29 @@ void *philo_routine(void *sc)
 
     //start
 
+	
+	
+	scope = (t_philo_scope *)sc;
 	pthread_mutex_lock(scope->dead_date_mutex);       //-ML
 	eats = 0;
-	scope = (t_philo_scope *)sc;
-
 	*(scope->birth_date) = get_time_ms();
     start_time = *(scope->birth_date);
     *(scope->dead_date) = start_time + scope->argx[TIME_TO_DIE];//
 	pthread_mutex_unlock(scope->dead_date_mutex);	 //-MU
-	monitor(scope,  start_time, "is thinking");
+	monitor(scope,  start_time, " is thinking\n");
 
 	while(1)
 	{
         //take first fork
 		pthread_mutex_lock(scope->first_fork);
-		if(monitor(scope,  start_time, "has taken a fork"))
+		if(monitor(scope,  start_time, " has taken a fork\n"))
 		{
 			pthread_mutex_unlock(scope->first_fork);
 			return (sc);
 		}
         //take second fork
 		pthread_mutex_lock(scope->second_fork);
-		if(monitor(scope,  start_time, "has taken a fork"))
+		if(monitor(scope,  start_time, " has taken a fork\n"))
 		{
 			pthread_mutex_unlock(scope->first_fork);
 			pthread_mutex_unlock(scope->second_fork);
@@ -52,7 +53,7 @@ void *philo_routine(void *sc)
 		pthread_mutex_lock(scope->dead_date_mutex);		 		// -ML
         *(scope->dead_date) = *(scope->dead_date) + scope->argx[TIME_TO_DIE];	//
 		pthread_mutex_unlock(scope->dead_date_mutex);      		//-MU
-		if(monitor(scope,  start_time, "is eating"))
+		if(monitor(scope,  start_time, " is eating\n"))
 		{
 			pthread_mutex_unlock(scope->first_fork);
 			pthread_mutex_unlock(scope->second_fork);
@@ -63,12 +64,12 @@ void *philo_routine(void *sc)
 		pthread_mutex_unlock(scope->first_fork);
 		pthread_mutex_unlock(scope->second_fork);
         //duerme y piensa
-		if(monitor(scope,  start_time, "is sleeping"))
+		if(monitor(scope,  start_time, " is sleeping\n"))
 			return (sc);
 		usleep(scope->argx[TIME_TO_SLEEP] * 1000);
 		if(eats >= scope->argx[MAX_EATS])
 			return (sc);
-		if(monitor(scope,  start_time, "is thinking"))
+		if(monitor(scope,  start_time, " is thinking\n"))
 			return (sc);
 	}
 	return (sc);
@@ -83,7 +84,7 @@ long long	get_time_ms(void)
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int	monitor(t_philo_scope *scp, long long *start, char *msg)
+int	monitor(t_philo_scope *scp, long long start, char *msg)
 {
 	long long		time;
 	int				good_bye;
@@ -92,11 +93,11 @@ int	monitor(t_philo_scope *scp, long long *start, char *msg)
 	time = get_time_ms();
 
 	pthread_mutex_lock(scp->mutex_end);
-	good_bye = scp->the_end;
+	good_bye = *(scp->the_end);
 	pthread_mutex_unlock(scp->mutex_end);
 
 	pthread_mutex_lock(scp->dead_date_mutex);
-	if(time > scp->dead_date)
+	if(time > *(scp->dead_date))
 		good_bye++;
 	pthread_mutex_unlock(scp->dead_date_mutex);
 
@@ -127,28 +128,29 @@ char	*join_check(char *str_a, char *str_b, char **result)
 	return(*result);
 }
 
-char	*cmpmsg(long long *start, long long time, unsigned int name, char *msg)
+char	*cmpmsg(long long start, long long time, unsigned int n, char *msg)
 {
-	char		*full_msg;
-	char		*aux;
-	char		*name;
+	char	*full_msg;
+	char	*aux;
+	char	*name;
 
-	time = time - *start;
-	if(time > INT_MAX || name > INT_MAX);
-		return(NULL);
-	aux = ft_itoa(time);
+	time = time - start;
+	/*if(time > LLONG_MAX || n > _MAX)
+		return(NULL);*/
+	aux = ft_lltoa(time);
 	if(aux == NULL)
 		return(NULL);
-	if(!join_check(aux, " ", full_msg))
+	if(!join_check(aux, " ", &(full_msg)))
 		return (NULL);
 	free(aux);
-	name = ft_itoa(name);//CUIDADO DESBORDA!!!!!!!!!!!!!!
+	name = ft_lltoa(n); //estaria bien almacenar el nombre en la funcion llamadora, para no tener que hacer itoa cada vez que halla que imprimir algo
 	if(name == NULL)
 		return(NULL);
-	if(!join_check(full_msg, name, aux))
+	if(!join_check(full_msg, name, &(aux)))
 		return(NULL);
 	free(full_msg);
 	free(name);
 	full_msg = ft_strjoin(aux, msg);
+	free(aux);
 	return(full_msg);
 }

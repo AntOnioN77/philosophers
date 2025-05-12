@@ -3,7 +3,8 @@
     "files.associations": {
         "types.h": "c",
         "typeinfo": "c",
-        "philosophers.h": "c"
+        "philosophers.h": "c",
+        "stdlib.h": "c"
     },
     "github.copilot.enable": {
         "*": false,

@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:40:31 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 17:23:03 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/11 22:05:32 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int validate_args(int argc, char **argv)
         }
         i++;
     }
-    if(argc = 5 && !is_in_bounds_uint(argv[5]))
+    if(argc == 6 && !is_in_bounds_uint(argv[5]))
     {
         printf("Error: 1º Argument is not a valid number.\n");
         printf("MAX:4294967295\nMIN:0\nDo not use letters, spaces, commas or dots.\n");

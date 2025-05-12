@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:07:40 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 16:29:51 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/11 21:42:21 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,6 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (*s != '\0')
-	{
-		i++;
-		s++;
-	}
-	return (i);
-}
 long	ft_atol(const char *str)
 {
 	long		total;

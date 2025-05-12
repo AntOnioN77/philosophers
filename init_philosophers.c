@@ -6,14 +6,14 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/10 19:45:28 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/11 22:31:35 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 int			init_one_philo(t_world *world, unsigned int philo_n);
-static int	reserve_memory(t_world *world, int num_of_philos);
+static int	reserve_memory(t_world *world, unsigned int num_of_philos);
 
 int	init_philosophers(t_world *world)
 {
@@ -45,18 +45,18 @@ int	init_philosophers(t_world *world)
 	return (0);
 }
 
-static int	reserve_memory(t_world *world, int num_of_philos)
+static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 {
 	world->philosophers =  malloc(sizeof(pthread_t) * num_of_philos);
 	if (world->philosophers ==NULL)
 		return (1);
-	world->dead_date_arr =  malloc(sizeof(int) * num_of_philos);
+	world->dead_date_arr =  malloc(sizeof(long long) * num_of_philos);
 	if (world->dead_date_arr == NULL)
 	{
 		free(world->philosophers);
 		return (1);
 	}
-	world->birth_date_arr =  malloc(sizeof(int) * num_of_philos);
+	world->birth_date_arr =  malloc(sizeof(long long) * num_of_philos);
 	if (world->birth_date_arr == NULL)
 	{
 		free(world->dead_date_arr);
@@ -121,6 +121,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 
 	stablish_order_forks(philo_n, scope, left, rigth);
 
+	scope->birth_date = &(world->birth_date_arr[philo_n]);
 	scope->dead_date = &(world->dead_date_arr[philo_n]);
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
 	scope->the_end = &(world->the_end);
