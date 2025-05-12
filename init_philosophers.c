@@ -56,13 +56,6 @@ static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 		free(world->philosophers);
 		return (1);
 	}
-	world->birth_date_arr =  malloc(sizeof(long long) * num_of_philos);
-	if (world->birth_date_arr == NULL)
-	{
-		free(world->dead_date_arr);
-		free(world->philosophers);
-		return (1);
-	}
 	return (0);
 }
 
@@ -121,7 +114,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 
 	stablish_order_forks(philo_n, scope, left, rigth);
 
-	scope->birth_date = &(world->birth_date_arr[philo_n]);
+	scope->start_date = world->start_date;
 	scope->dead_date = &(world->dead_date_arr[philo_n]);
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
 	scope->the_end = &(world->the_end);

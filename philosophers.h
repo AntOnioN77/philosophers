@@ -48,7 +48,7 @@ typedef struct s_world
 	long long       *dead_date_arr;		// array
 	pthread_mutex_t	*dead_date_mutex_arr;	// array
 	pthread_t 		*philosophers;	// array
-	long long		*birth_date_arr;
+	long long		start_date;
 	pthread_t       observer;
 	pthread_mutex_t	*forks;			// array
 	pthread_mutex_t mutex_end;
@@ -62,7 +62,7 @@ typedef struct s_philo_scope
 	unsigned int	*argx;
 	pthread_mutex_t	*first_fork;
 	pthread_mutex_t	*second_fork;
-	long long		*birth_date;
+	long long		start_date;
 	long long		*dead_date;
 	pthread_mutex_t	*dead_date_mutex;
 	int				*the_end;

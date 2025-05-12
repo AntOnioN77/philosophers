@@ -40,10 +40,10 @@ int	simulation(t_world *world)
 void	thread_join_all(pthread_t philosophers[], unsigned int n)
 {
 	void *tread_ret;
-	n--;
-	while (n >= 0)
+
+	while (n > 0)
 	{
-		pthread_join(philosophers[n], &tread_ret);
+		pthread_join(philosophers[n-1], &tread_ret);
 		free(tread_ret); //libera scoope, el hilo main es propietario de la memoria scoope
 	}
 }
@@ -69,7 +69,6 @@ int	free_simulated_world(int sim_ret, t_world *world)
 		//liberar philos
 		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
 		free(world->philosophers);
-		free(world->birth_date_arr);
 		//liberar mutexes
 		destroy_mutexes(world);
 	}
@@ -81,7 +80,6 @@ int	free_simulated_world(int sim_ret, t_world *world)
 
 		free(world->philosophers);
 
-		free(world->birth_date_arr);
 		//liberar mutexes
 		destroy_mutexes(world);
 		return(0);

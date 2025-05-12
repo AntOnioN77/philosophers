@@ -26,8 +26,7 @@ void *philo_routine(void *sc)
 	scope = (t_philo_scope *)sc;
 	pthread_mutex_lock(scope->dead_date_mutex);       //-ML
 	eats = 0;
-	*(scope->birth_date) = get_time_ms();
-    start_time = *(scope->birth_date);
+    start_time = scope->start_date;
     *(scope->dead_date) = start_time + scope->argx[TIME_TO_DIE];//
 	pthread_mutex_unlock(scope->dead_date_mutex);	 //-MU
 	monitor(scope,  start_time, " is thinking\n");
