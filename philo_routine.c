@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 10:45:01 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 12:02:40 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void *philo_routine(void *sc)
 		pthread_mutex_unlock(scope->second_fork);
 		if(scope->argx[MAX_EATS] != 0 && eats >= scope->argx[MAX_EATS])
 		{
-printf("ln64 philo_routine argx[MAX_EATS]:%d\n",scope->argx[MAX_EATS]);
-fflush(NULL);
 			pthread_mutex_lock(scope->mutex_end);
 			*(scope->the_end)= 1;
 			pthread_mutex_unlock(scope->mutex_end);
@@ -75,6 +73,7 @@ fflush(NULL);
 
 		if(monitor(scope,  start_time, " is thinking\n"))
 			return (sc);
+	//	printf("78 philo_routine time_to_sleep:%d\n", scope->tinking_time);
 		usleep(scope->tinking_time);//prueba BORRAR 
 	}
 	return (sc);
