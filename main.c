@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 12:54:28 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:25:49 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[])
 		*tinking_time = (argx[TIME_TO_DIE] - argx[TIME_TO_EAT] - ((argx[TIME_TO_EAT] * 2) - argx[TIME_TO_SLEEP])) * 1000;
 	else
 		*tinking_time = (argx[TIME_TO_DIE] - argx[TIME_TO_EAT] - argx[TIME_TO_SLEEP]) * 1000;
-//printf("main l40 tiniking_time:%u\n", *tinking_time);
+printf("main l40 tiniking_time:%u\n", *tinking_time);
 fflush(NULL);
 	if(*tinking_time > delay )
 		*tinking_time = *tinking_time - delay;
 	else if (*tinking_time != 0)
 		*tinking_time = *tinking_time / 2;		
-//printf("main l46 tiniking_time:%u\n", *tinking_time);
+printf("main l46 tiniking_time:%u\n", *tinking_time);
 fflush(NULL);
 }
 

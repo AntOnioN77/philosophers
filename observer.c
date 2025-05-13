@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 10:05:26 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:22:45 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,20 @@
 
 # include <unistd.h>//YA DEBERIA ESTAR en philosophers.h?!?!?!?
 
+void	end_all_philos(pthread_mutex_t *mutex_end_array,
+	int *the_end_array, unsigned int num_of_philos)
+{
+	unsigned int i;
+
+	i = 0;
+	while(i < num_of_philos)
+	{
+		pthread_mutex_lock(&(mutex_end_array[i]));
+		the_end_array[i] = 1;
+		pthread_mutex_unlock(&(mutex_end_array[i]));
+		i++;
+	}
+}
 
 int check_survivors(t_world *world, long long *dead_date_arr)
 {
@@ -46,13 +60,14 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 			pthread_mutex_lock(&(world->dead_date_mutex_arr[i]));
 			if ( dead_date_arr[i] < time)
 			{
-				msg = cmpmsg(world->start_date, time, 1+1, " died\n");
+				msg = cmpmsg(world->start_date, time, i+1, " died\n");
 				if (msg == NULL)
 					return (ERROR);//no se estan desmuteando en caso de error dead_date_mutex_arr ni mutex_end_array 
 				ft_putstr_fd(msg, 1);
 				//pthread_mutex_lock(&(world->mutex_end_array[i]));				
-				world->the_end_array[i] = 1;
+				//world->the_end_array[i] = 1;
 				//pthread_mutex_unlock(&(world->mutex_end_array[i]));
+				//TO DO:
 				dead++;
 			}
 			pthread_mutex_unlock(&(world->dead_date_mutex_arr[i]));
@@ -61,10 +76,13 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 			ended++;
 		pthread_mutex_unlock(&(world->mutex_end_array[i]));
 		i++;
-
 	}
 	if (dead || ended == n)
+	{
+		end_all_philos(world->mutex_end_array,
+			world->the_end_array, world->argx[NUM_OF_PHILO]);
 		return (1);
+	}
 	return(0);
 }
 
@@ -81,7 +99,7 @@ void    *observer_routine(void *world)
 
 		if(check_survivors(wo, wo->dead_date_arr))      
 			return (NULL);
-		usleep(1000);
+		usleep(100);//PRUEBAS SOLO?
 	}
 	return(NULL);
 
