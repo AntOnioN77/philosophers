@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 14:25:49 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:10:37 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,27 @@ int main(int argc, char **argv)
 //TIME_TO_DIE - (TIME_TO_EAT * 3 + TIME_TO_SLEEP) - (DELAY_FACTOR * NUM_OF_PHILO)
 void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[])
 {
-	unsigned int	delay;
+	long	delay;
+	long	time_to_eat;
+	long	time_to_sleep;
+	long	time_to_die;
+	long	total;
 
-	delay = DELAY_FACTOR * argx[NUM_OF_PHILO];
+	delay = (long) DELAY_FACTOR * argx[NUM_OF_PHILO];
+	time_to_eat = (long) argx[TIME_TO_EAT];
+	time_to_sleep = (long) argx[TIME_TO_SLEEP];
+	time_to_die = (long) argx[TIME_TO_DIE];
 
-	if(argx[TIME_TO_SLEEP] < (argx[TIME_TO_EAT] * 2))
-		*tinking_time = (argx[TIME_TO_DIE] - argx[TIME_TO_EAT] - ((argx[TIME_TO_EAT] * 2) - argx[TIME_TO_SLEEP])) * 1000;
+
+	if(time_to_sleep < (time_to_eat * 2))
+		total = (time_to_die - time_to_eat - ((time_to_eat * 2) - time_to_sleep)) * 1000;
 	else
-		*tinking_time = (argx[TIME_TO_DIE] - argx[TIME_TO_EAT] - argx[TIME_TO_SLEEP]) * 1000;
-printf("main l40 tiniking_time:%u\n", *tinking_time);
-fflush(NULL);
-	if(*tinking_time > delay )
-		*tinking_time = *tinking_time - delay;
-	else if (*tinking_time != 0)
-		*tinking_time = *tinking_time / 2;		
+		total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
+		
+	if(total - delay > 0)
+		*tinking_time = (unsigned int) (total - delay);
+	else
+		*tinking_time = 0;		
 printf("main l46 tiniking_time:%u\n", *tinking_time);
 fflush(NULL);
 }

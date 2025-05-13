@@ -1,0 +1,43 @@
+main l46 tiniking_time:198200
+0 1 is thinking
+1 1 has taken a fork
+1 1 has taken a fork
+1 1 is eating
+0 2 is thinking
+1 2 has taken a fork
+0 3 is thinking
+101 1 is sleeping
+101 2 has taken a fork
+101 2 is eating
+201 1 is thinking
+201 2 is sleeping
+201 3 has taken a fork
+201 3 has taken a fork
+201 3 is eating
+301 2 is thinking
+301 3 is sleeping
+399 1 has taken a fork
+399 1 has taken a fork
+399 1 is eating
+401 3 is thinking
+499 2 has taken a fork
+500 1 is sleeping
+500 2 has taken a fork
+500 2 is eating
+600 1 is thinking
+600 2 is sleeping
+600 3 has taken a fork
+600 3 has taken a fork
+600 3 is eating
+700 2 is thinking
+700 3 is sleeping
+798 1 has taken a fork
+798 1 has taken a fork
+798 1 is eating
+800 3 is thinking
+898 2 has taken a fork
+898 2 has taken a fork
+898 2 is eating
+999 3 has taken a fork
+999 3 has taken a fork
+999 3 is eating

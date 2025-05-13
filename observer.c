@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 14:22:45 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:26:33 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void    *observer_routine(void *world)
 
 		if(check_survivors(wo, wo->dead_date_arr))      
 			return (NULL);
-		usleep(100);//PRUEBAS SOLO?
+		usleep(OBSERVER_PAUSE);//PRUEBAS SOLO?
 	}
 	return(NULL);
 

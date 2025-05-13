@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 14:32:30 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 15:57:09 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
 	scope->the_end = &(world->the_end_array[philo_n]);
 	scope->mutex_end = &(world->mutex_end_array[philo_n]);
-	scope->tinking_time = world->argx[TIME_TO_EAT];//world->tinking_time;// BYPASS PRUEBA ARREGLAR!
+	scope->tinking_time =world->tinking_time;//  ((world->argx[TIME_TO_EAT] - world->argx[TIME_TO_SLEEP]) * 1000);
 	return (scope);
 }
 

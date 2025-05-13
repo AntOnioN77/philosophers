@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 12:36:18 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:58:18 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void *philo_routine(void *sc)
 			return (sc);
 //		printf("78 philo_routine\n");
 		fflush(NULL);
-		usleep(scope->tinking_time);//prueba BORRAR 
+		usleep(scope->tinking_time);
 	}
 	return (sc);
 }

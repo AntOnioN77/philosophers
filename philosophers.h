@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 14:27:57 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:24:56 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ typedef int	t_bool;
 
 # define TEST 0
 
-# define DELAY_FACTOR 30
+# define DELAY_FACTOR 600
+# define OBSERVER_PAUSE 50
 # define FALSE 0
 # define TRUE 1
 # define ODD 1

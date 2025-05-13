@@ -1,0 +1,107 @@
+==25482== Helgrind, a thread error detector
+==25482== Copyright (C) 2007-2017, and GNU GPL'd, by OpenWorks LLP et al.
+==25482== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==25482== Command: timeout 5s ./philosophers 4 410 200 200 5
+==25482== 
+main l46 tiniking_time:7600
+0 1 is thinking
+0 1 has taken a fork
+0 1 has taken a fork
+0 1 is eating
+0 3 is thinking
+0 3 has taken a fork
+0 4 is thinking
+0 3 has taken a fork
+0 3 is eating
+0 2 is thinking
+200 3 is sleeping
+200 1 is sleeping
+201 2 has taken a fork
+201 4 has taken a fork
+201 2 has taken a fork
+201 4 has taken a fork
+201 2 is eating
+201 4 is eating
+401 1 is thinking
+401 3 is thinking
+401 4 is sleeping
+401 2 is sleeping
+408 3 has taken a fork
+408 1 has taken a fork
+408 1 has taken a fork
+408 3 has taken a fork
+408 1 is eating
+408 3 is eating
+601 4 is thinking
+601 2 is thinking
+609 1 is sleeping
+609 3 is sleeping
+609 2 has taken a fork
+609 4 has taken a fork
+609 2 has taken a fork
+609 4 has taken a fork
+609 2 is eating
+609 4 is eating
+809 1 is thinking
+809 3 is thinking
+809 4 is sleeping
+809 2 is sleeping
+817 1 has taken a fork
+817 3 has taken a fork
+817 3 has taken a fork
+817 1 has taken a fork
+817 3 is eating
+817 1 is eating
+1009 4 is thinking
+1009 2 is thinking
+1017 1 is sleeping
+1017 3 is sleeping
+1017 2 has taken a fork
+1017 4 has taken a fork
+1017 2 has taken a fork
+1017 4 has taken a fork
+1017 4 is eating
+1017 2 is eating
+1217 1 is thinking
+1217 3 is thinking
+1217 2 is sleeping
+1217 4 is sleeping
+1225 3 has taken a fork
+1225 1 has taken a fork
+1225 1 has taken a fork
+1225 3 has taken a fork
+1225 1 is eating
+1225 3 is eating
+1417 4 is thinking
+1417 2 is thinking
+1425 3 is sleeping
+1425 1 is sleeping
+1425 4 has taken a fork
+1425 2 has taken a fork
+1425 4 has taken a fork
+1425 2 has taken a fork
+1425 4 is eating
+1425 2 is eating
+1625 3 is thinking
+1625 1 is thinking
+1625 2 is sleeping
+1625 4 is sleeping
+1633 1 has taken a fork
+1633 3 has taken a fork
+1633 1 has taken a fork
+1633 3 has taken a fork
+1633 1 is eating
+1633 3 is eating
+1825 4 is thinking
+1825 2 is thinking
+1833 4 has taken a fork
+1833 2 has taken a fork
+1833 4 has taken a fork
+1833 2 has taken a fork
+1833 4 is eating
+1833 2 is eating
+==25482== 
+==25482== Use --history-level=approx or =none to gain increased speed, at
+==25482== the cost of reduced accuracy of conflicting-access information
+==25482== For lists of detected and suppressed errors, rerun with: -s
+==25482== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
