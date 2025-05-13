@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 17:07:10 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:32:38 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	init_philosophers(t_world *world)
 		return (1);
 	current = 1;
 	error = 0;
+	world->start_date = get_time_ms();
 	while (current <= n_philos)
 	{
 		error = init_one_philo(world, current);
@@ -118,7 +119,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 		return (NULL);
 	scope->name = philo_n + 1;
 	scope->argx = world->argx;
-	left= find_left_fork(world->forks, philo_n, world->argx[NUM_OF_PHILO]);
+	left = find_left_fork(world->forks, philo_n, world->argx[NUM_OF_PHILO]);
 	rigth = &(world->forks[philo_n]);
 
 	stablish_order_forks(philo_n, scope, left, rigth);
@@ -128,6 +129,7 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
 	scope->the_end = &(world->the_end_array[philo_n]);
 	scope->mutex_end = &(world->mutex_end_array[philo_n]);
+	scope->tinking_time = world->tinking_time;
 	return (scope);
 }
 

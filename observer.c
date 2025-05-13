@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 17:39:01 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:05:26 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 				if (msg == NULL)
 					return (ERROR);//no se estan desmuteando en caso de error dead_date_mutex_arr ni mutex_end_array 
 				ft_putstr_fd(msg, 1);
-				pthread_mutex_lock(&(world->mutex_end_array[i]));
+				//pthread_mutex_lock(&(world->mutex_end_array[i]));				
 				world->the_end_array[i] = 1;
-				pthread_mutex_unlock(&(world->mutex_end_array[i]));
+				//pthread_mutex_unlock(&(world->mutex_end_array[i]));
 				dead++;
 			}
 			pthread_mutex_unlock(&(world->dead_date_mutex_arr[i]));

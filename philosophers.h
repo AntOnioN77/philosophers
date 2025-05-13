@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 17:40:30 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:44:13 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef int	t_bool;
 
 # define TEST 0
 
-# define DELAY_FACTOR 300
+# define DELAY_FACTOR 2
 # define FALSE 0
 # define TRUE 1
 # define ODD 1
@@ -59,6 +59,7 @@ typedef struct s_world
 	pthread_mutex_t	*forks;			// array
 	pthread_mutex_t *mutex_end_array;
 	int             *the_end_array;
+	unsigned int	tinking_time;
 }   t_world;
 
 typedef struct s_philo_scope
@@ -73,6 +74,7 @@ typedef struct s_philo_scope
 	pthread_mutex_t	*dead_date_mutex;
 	int				*the_end;
 	pthread_mutex_t *mutex_end;
+	unsigned int	tinking_time;
 }   t_philo_scope;
 
 /*LOCATION: validate_args.c*/

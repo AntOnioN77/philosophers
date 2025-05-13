@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 16:54:43 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:44:17 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,16 @@ int main(int argc, char **argv)
 	return (0);
 }
 
+//TIME_TO_DIE - (TIME_TO_EAT * 3 + TIME_TO_SLEEP) - (DELAY_FACTOR * NUM_OF_PHILO)
+void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[])
+{
+	*tinking_time = (argx[TIME_TO_EAT] * 3 + argx[TIME_TO_SLEEP])
+		- (DELAY_FACTOR * argx[NUM_OF_PHILO]);
+}
+
 int	simulation(t_world *world)
 {
-	world->start_date = get_time_ms();
+	agree_time_tinking(&(world->tinking_time), world->argx);
 	if(create_mutexes(world))
 		return(1); //sale limpio
 	if (init_philosophers(world))
