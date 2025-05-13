@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 12:02:40 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 12:36:18 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void *philo_routine(void *sc)
 
 		if(monitor(scope,  start_time, " is thinking\n"))
 			return (sc);
-	//	printf("78 philo_routine time_to_sleep:%d\n", scope->tinking_time);
+//		printf("78 philo_routine\n");
+		fflush(NULL);
 		usleep(scope->tinking_time);//prueba BORRAR 
 	}
 	return (sc);
