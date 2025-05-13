@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 16:10:37 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:21:08 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[])
 	time_to_sleep = (long) argx[TIME_TO_SLEEP];
 	time_to_die = (long) argx[TIME_TO_DIE];
 
-
+// ESTE ALGORITMO ES PARA IMPARES, se puede optimizar para que los pares piensen mas tiempo
 	if(time_to_sleep < (time_to_eat * 2))
 		total = (time_to_die - time_to_eat - ((time_to_eat * 2) - time_to_sleep)) * 1000;
 	else
