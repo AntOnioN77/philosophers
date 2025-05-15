@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 16:24:56 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/15 21:57:24 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,11 @@ typedef int	t_bool;
 
 # define TEST 0
 
-# define DELAY_FACTOR 600
+# define DELAY_FACTOR 20
+//# define EVEN_WAIT 150
 # define OBSERVER_PAUSE 50
+# define RECALL_WAIT 200
+
 # define FALSE 0
 # define TRUE 1
 # define ODD 1
@@ -48,6 +51,14 @@ enum	e_argx
 	MAX_EATS,
 };
 
+typedef enum	e_states
+{
+	NO_EAT,
+	YES_EAT,
+	EATING,
+	THE_END,
+}	t_states;
+
 /*STRUCTS*/
 typedef struct s_world
 {
@@ -58,8 +69,8 @@ typedef struct s_world
 	long long		start_date;
 	pthread_t       observer;
 	pthread_mutex_t	*forks;			// array
-	pthread_mutex_t *mutex_end_array;
-	int             *the_end_array;
+	pthread_mutex_t *mutex_state_array;
+	t_states        *state_array;
 	unsigned int	tinking_time;
 }   t_world;
 
@@ -73,8 +84,8 @@ typedef struct s_philo_scope
 	long long		start_date;
 	long long		*dead_date;
 	pthread_mutex_t	*dead_date_mutex;
-	int				*the_end;
-	pthread_mutex_t *mutex_end;
+	t_states		*state;
+	pthread_mutex_t *mutex_state;
 	unsigned int	tinking_time;
 }   t_philo_scope;
 

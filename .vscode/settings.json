@@ -4,7 +4,8 @@
         "types.h": "c",
         "typeinfo": "c",
         "philosophers.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "unistd.h": "c"
     },
     "github.copilot.enable": {
         "*": false,

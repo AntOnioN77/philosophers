@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 16:26:33 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/15 22:13:45 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 # include <unistd.h>//YA DEBERIA ESTAR en philosophers.h?!?!?!?
 
-void	end_all_philos(pthread_mutex_t *mutex_end_array,
-	int *the_end_array, unsigned int num_of_philos)
+void	end_all_philos(pthread_mutex_t *mutex_state_array,
+	t_states *state_array, unsigned int num_of_philos)
 {
 	unsigned int i;
 
 	i = 0;
 	while(i < num_of_philos)
 	{
-		pthread_mutex_lock(&(mutex_end_array[i]));
-		the_end_array[i] = 1;
-		pthread_mutex_unlock(&(mutex_end_array[i]));
+		pthread_mutex_lock(&(mutex_state_array[i]));
+		state_array[i] = THE_END;
+		pthread_mutex_unlock(&(mutex_state_array[i]));
 		i++;
 	}
 }
@@ -45,42 +45,41 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 	while(i < n)
 	{
 		time = get_time_ms();
-///////////////////////////////////////////////////////////////////////////////////////		
-		if(TEST)
-		{
-			printf("*****(check_survivors,observer)chekeando philo %d******\n", i+1);
-			printf("dead_date=%lld time=%lld\n", dead_date_arr[i], time);
-			fflush(NULL);
-		}
-////////////////////////////////////////////////////////////////////////////////////////
 		
-		pthread_mutex_lock(&(world->mutex_end_array[i]));
-		if(!world->the_end_array[i])
+		pthread_mutex_lock(&(world->mutex_state_array[i]));
+		if(world->state_array[i] !=THE_END)
 		{
 			pthread_mutex_lock(&(world->dead_date_mutex_arr[i]));
 			if ( dead_date_arr[i] < time)
 			{
 				msg = cmpmsg(world->start_date, time, i+1, " died\n");
 				if (msg == NULL)
-					return (ERROR);//no se estan desmuteando en caso de error dead_date_mutex_arr ni mutex_end_array 
+					return (ERROR);//no se estan desmuteando en caso de error dead_date_mutex_arr ni mutex_state_array 
 				ft_putstr_fd(msg, 1);
-				//pthread_mutex_lock(&(world->mutex_end_array[i]));				
-				//world->the_end_array[i] = 1;
-				//pthread_mutex_unlock(&(world->mutex_end_array[i]));
+				free(msg);
+				//pthread_mutex_lock(&(world->mutex_state_array[i]));				
+				//world->state_array[i] = 1;
+				//pthread_mutex_unlock(&(world->mutex_state_array[i]));
 				//TO DO:
 				dead++;
 			}
 			pthread_mutex_unlock(&(world->dead_date_mutex_arr[i]));
+			if (world->state_array[i] == EATING)
+			{
+				/////////////////TO DO///////////////////////////
+				//Consulta el estado de el filosofo a la izquiera y a la derecha si es NO_EAT lo cambia a YES_EAT
+				// para ello usa mutex por supuesto
+			}
 		}
 		else
 			ended++;
-		pthread_mutex_unlock(&(world->mutex_end_array[i]));
+		pthread_mutex_unlock(&(world->mutex_state_array[i]));
 		i++;
 	}
 	if (dead || ended == n)
 	{
-		end_all_philos(world->mutex_end_array,
-			world->the_end_array, world->argx[NUM_OF_PHILO]);
+		end_all_philos(world->mutex_state_array,
+			world->state_array, world->argx[NUM_OF_PHILO]);
 		return (1);
 	}
 	return(0);

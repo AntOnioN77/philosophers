@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 17:21:08 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/15 20:18:56 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,31 @@ void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[])
 	time_to_die = (long) argx[TIME_TO_DIE];
 
 // ESTE ALGORITMO ES PARA IMPARES, se puede optimizar para que los pares piensen mas tiempo
-	if(time_to_sleep < (time_to_eat * 2))
-		total = (time_to_die - time_to_eat - ((time_to_eat * 2) - time_to_sleep)) * 1000;
+	if(argx[NUM_OF_PHILO % 2 != 0])
+	{
+		if(time_to_sleep < (time_to_eat * 2))
+			total = (time_to_die - time_to_eat - ((time_to_eat * 2) - time_to_sleep)) * 1000;
+		else
+			total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
+			
+		if(total - delay > 0)
+			*tinking_time = (unsigned int) (total - delay);
+		else
+			*tinking_time = 0;		
+	}
 	else
-		total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
-		
-	if(total - delay > 0)
-		*tinking_time = (unsigned int) (total - delay);
-	else
-		*tinking_time = 0;		
+	{
+		if(time_to_sleep < time_to_eat)
+			total = (time_to_die - time_to_eat - ((time_to_eat) - time_to_sleep)) * 1000;
+		else
+			total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
+			
+		if(total - delay > 0)
+			*tinking_time = (unsigned int) (total - delay);
+		else
+			*tinking_time = 0;	
+	}
+
 printf("main l46 tiniking_time:%u\n", *tinking_time);
 fflush(NULL);
 }
@@ -84,8 +100,8 @@ void	destroy_mutexes(t_world *world)
 	free(world->forks);
 	destroy_arr_mutex(world->dead_date_mutex_arr, world->argx[NUM_OF_PHILO]);
 	free(world->dead_date_mutex_arr);
-	destroy_arr_mutex(world->mutex_end_array, world->argx[NUM_OF_PHILO]);
-	free(world->mutex_end_array);
+	destroy_arr_mutex(world->mutex_state_array, world->argx[NUM_OF_PHILO]);
+	free(world->mutex_state_array);
 }
 
 int	free_simulated_world(int sim_ret, t_world *world)
@@ -105,6 +121,8 @@ int	free_simulated_world(int sim_ret, t_world *world)
 		//liberar philos
 		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
 		free(world->philosophers);
+		free(world->dead_date_arr);
+		free(world->state_array);
 		//liberar mutexes
 		destroy_mutexes(world);
 	}
@@ -115,7 +133,8 @@ int	free_simulated_world(int sim_ret, t_world *world)
 		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
 
 		free(world->philosophers);
-
+		free(world->dead_date_arr);
+		free(world->state_array);
 		//liberar mutexes
 		destroy_mutexes(world);
 		return(0);

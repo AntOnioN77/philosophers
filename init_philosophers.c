@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/13 15:57:09 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/15 21:18:06 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,26 @@ int	init_philosophers(t_world *world)
 	n_philos = world->argx[NUM_OF_PHILO];
 	if (reserve_memory(world, n_philos))
 		return (1);
+	world->start_date = get_time_ms();
+
+	// Initialize odd philosophers first
 	current = 1;
 	error = 0;
-	world->start_date = get_time_ms();
 	while (current <= n_philos)
 	{
 		error = init_one_philo(world, current);
 		if (error)
 		{
-			//world->the_end = 1 - world->argx[NUM_OF_PHILO];
 			current--;
 			while (current > 0)
-				pthread_join(world->philosophers[current -1], NULL);
+				pthread_join(world->philosophers[current - 1], NULL);
 			free(world->philosophers);
 			free(world->dead_date_arr);
 			return (error);
 		}
 		current++;
-	
 	}
+
 	return (0);
 }
 
@@ -57,14 +58,14 @@ static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 		free(world->philosophers);
 		return (1);
 	}
-	world->the_end_array =  malloc(sizeof(long long) * num_of_philos);
-	if (world->the_end_array == NULL)
+	world->state_array =  malloc(sizeof(t_states) * num_of_philos);
+	if (world->state_array == NULL)
 	{
 		free(world->philosophers);
 		free(world->dead_date_arr);
 		return (1);
 	}
-	memset(world->the_end_array, 0, sizeof(int) * num_of_philos);
+	memset(world->state_array, 0, sizeof(t_states) * num_of_philos);
 	return (0);
 }
 
@@ -85,26 +86,29 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 		return (1);
 	new_philo = &(world->philosophers[philo_n]);
 	
-
-
 	if(pthread_create(new_philo, NULL, philo_routine, scope))
 		return (1);
 	return (0);
 
 }
 
-void	stablish_order_forks(unsigned int n, t_philo_scope *scope, pthread_mutex_t *left,
+
+//cambiar nombre, establece dos cosas, que tenedor usara primero pero tambien, si al inicio tendra permiso para comer.
+//TODO abdtraer la logica izquierda derecha y resolver todo lo relativo a los tenedores en esta funcion
+void	stablish_order_forks(unsigned int name, t_philo_scope *scope, pthread_mutex_t *left,
 	pthread_mutex_t *rigth)
 {
-	if ((n % 2) == 0)
+	if ((name % 2) == 0)
 	{
 		scope->first_fork = left;
 		scope->second_fork = rigth;
+		*(scope->state) = NO_EAT;
 	}
 	else
 	{
 		scope->first_fork = rigth;
 		scope->second_fork = left;
+		*(scope->state) = YES_EAT;
 	}
 }
 
@@ -122,13 +126,14 @@ t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 	left = find_left_fork(world->forks, philo_n, world->argx[NUM_OF_PHILO]);
 	rigth = &(world->forks[philo_n]);
 
-	stablish_order_forks(philo_n, scope, left, rigth);
+	scope->state = &(world->state_array[philo_n]);
+	scope->mutex_state = &(world->mutex_state_array[philo_n]);
+	stablish_order_forks(scope->name, scope, left, rigth);
 
 	scope->start_date = world->start_date;
 	scope->dead_date = &(world->dead_date_arr[philo_n]);
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
-	scope->the_end = &(world->the_end_array[philo_n]);
-	scope->mutex_end = &(world->mutex_end_array[philo_n]);
+
 	scope->tinking_time =world->tinking_time;//  ((world->argx[TIME_TO_EAT] - world->argx[TIME_TO_SLEEP]) * 1000);
 	return (scope);
 }
