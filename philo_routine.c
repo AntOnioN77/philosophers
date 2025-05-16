@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/16 13:37:23 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:22:05 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,10 @@ t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state, unsigned int
 {
 name = name + 0;///BORARR
 	pthread_mutex_lock(mutex_state);
-	if(*state == YES_EAT)
+	if(*state == YES_EAT || *state == THE_END)
 	{
 fprintf(stderr,"----------------%u YES_EAT--%lld\n", name, get_time_ms() - start);
 fflush(NULL);
-		*state = EATING;
 		pthread_mutex_unlock(mutex_state);
 		return(TRUE);
 	}
@@ -87,6 +86,9 @@ fflush(NULL);
 			pthread_mutex_unlock(scope->second_fork);
 			return (sc);
 		}
+		pthread_mutex_lock(scope->mutex_state);
+		*(scope->state) = EATING;
+		pthread_mutex_unlock(scope->mutex_state);
 		eats++;
 		usleep(scope->argx[TIME_TO_EAT] * 1000);
 		pthread_mutex_unlock(scope->first_fork);

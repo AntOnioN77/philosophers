@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/16 15:10:19 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:59:06 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,11 @@ void	neighborhood_update(pthread_mutex_t *mutex_state_array, t_states *state_arr
 	//pthread_mutex_lock(&(mutex_state_array[this]));
 	//if(state_array[this] == EATING)
 	//{
-	prev = (this - 1) % num_of_philo;
+	prev = ((this + num_of_philo) - 1) % num_of_philo;
 	next = (this + 1) % num_of_philo;
+	//printf("prev:%d, this:%d, next:%d\n", prev, this, next);
 
-	if(state_array[this] == EATING || state_array[this] == THE_END)
+	if(state_array[this] == EATING)
 	{
 		//prevenimos que coma dos veces seguidas retirando el permiso.
 		if (state_array[this] == EATING)
@@ -50,11 +51,15 @@ void	neighborhood_update(pthread_mutex_t *mutex_state_array, t_states *state_arr
 		pthread_mutex_lock(&(mutex_state_array[prev]));
 		if(state_array[prev] == NO_EAT)
 			state_array[prev] = ALMOST_EAT;
+		else if (state_array[prev] == ALMOST_EAT)
+			state_array[prev] = YES_EAT;
 		pthread_mutex_unlock(&(mutex_state_array[prev]));
 		//damos permiso al philosofo a su izquierda
 		pthread_mutex_lock(&(mutex_state_array[next]));
 		if(state_array[next] == NO_EAT)
 			state_array[next] = ALMOST_EAT;
+		else if (state_array[next] == ALMOST_EAT)
+			state_array[next] = YES_EAT;
 		pthread_mutex_unlock(&(mutex_state_array[next]));
 	}
 }

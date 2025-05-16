@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/16 15:07:51 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:19:08 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ enum	e_argx
 typedef enum	e_states
 {
 	NO_EAT,
-	ALMOST,
+	ALMOST_EAT,
 	YES_EAT,
 	EATING,
 	THE_END,
