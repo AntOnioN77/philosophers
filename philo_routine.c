@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/15 22:05:25 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:53:22 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state, unsigned int
 	if(*state == YES_EAT)
 	{
 printf("----------------%u YES_EAT\n", name);
+fflush(NULL);
 		*state = EATING;
 		pthread_mutex_unlock(mutex_state);
-printf("----------------%u NO_EAT\n", name);
 		return(TRUE);
 	}
 	else
 	{
+printf("----------------%u NO_EAT\n", name);
+fflush(NULL);
 		pthread_mutex_unlock(mutex_state);
 		return (FALSE);
 	}
