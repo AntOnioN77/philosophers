@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/16 11:03:10 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:10:19 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,26 +35,28 @@ void	neighborhood_update(pthread_mutex_t *mutex_state_array, t_states *state_arr
 	int	prev;
 	int	next;
 
-
 	//pthread_mutex_lock(&(mutex_state_array[this]));
-	if(state_array[this] == EATING)
+	//if(state_array[this] == EATING)
+	//{
+	prev = (this - 1) % num_of_philo;
+	next = (this + 1) % num_of_philo;
+
+	if(state_array[this] == EATING || state_array[this] == THE_END)
 	{
-		prev = (this - 1) % num_of_philo;
-		next = (this + 1) % num_of_philo;
 		//prevenimos que coma dos veces seguidas retirando el permiso.
-		state_array[this] = NO_EAT;
+		if (state_array[this] == EATING)
+			state_array[this] = NO_EAT;
 		//damos permiso al philosofo a su derecha
 		pthread_mutex_lock(&(mutex_state_array[prev]));
 		if(state_array[prev] == NO_EAT)
-			state_array[prev] = YES_EAT;
+			state_array[prev] = ALMOST_EAT;
 		pthread_mutex_unlock(&(mutex_state_array[prev]));
 		//damos permiso al philosofo a su izquierda
 		pthread_mutex_lock(&(mutex_state_array[next]));
 		if(state_array[next] == NO_EAT)
-			state_array[next] = YES_EAT;
+			state_array[next] = ALMOST_EAT;
 		pthread_mutex_unlock(&(mutex_state_array[next]));
 	}
-	//pthread_mutex_unlock(&(mutex_state_array[this]));
 }
 
 int check_survivors(t_world *world, long long *dead_date_arr)
@@ -92,13 +94,14 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 				dead++;
 			}
 			pthread_mutex_unlock(&(world->dead_date_mutex_arr[i]));
-			if (world->state_array[i] == EATING)
-			{
-				neighborhood_update(world->mutex_state_array, world->state_array, i, n);
-			}
+//			if (world->state_array[i] == EATING)
+//			{
+//				neighborhood_update(world->mutex_state_array, world->state_array, i, n);
+//			}
 		}
 		else
 			ended++;
+		neighborhood_update(world->mutex_state_array, world->state_array, i, n);
 		pthread_mutex_unlock(&(world->mutex_state_array[i]));
 		i++;
 	}

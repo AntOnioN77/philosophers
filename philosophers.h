@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/15 21:57:24 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:07:51 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ typedef int	t_bool;
 
 # define TEST 0
 
-# define DELAY_FACTOR 20
+# define DELAY_FACTOR 3000
 //# define EVEN_WAIT 150
-# define OBSERVER_PAUSE 50
-# define RECALL_WAIT 200
+# define OBSERVER_PAUSE 5
+# define RECALL_WAIT 20
 
 # define FALSE 0
 # define TRUE 1
@@ -54,6 +54,7 @@ enum	e_argx
 typedef enum	e_states
 {
 	NO_EAT,
+	ALMOST,
 	YES_EAT,
 	EATING,
 	THE_END,
