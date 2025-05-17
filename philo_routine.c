@@ -6,28 +6,28 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/16 16:22:05 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/17 11:20:00 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 
-t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state, unsigned int name, long long start)
+t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state, unsigned int name)
 {
 name = name + 0;///BORARR
 	pthread_mutex_lock(mutex_state);
 	if(*state == YES_EAT || *state == THE_END)
 	{
-fprintf(stderr,"----------------%u YES_EAT--%lld\n", name, get_time_ms() - start);
-fflush(NULL);
+/*fprintf(stderr,"----------------%u YES_EAT--%lld\n", name, get_time_ms() - start);
+fflush(NULL);*/
 		pthread_mutex_unlock(mutex_state);
 		return(TRUE);
 	}
 	else
 	{
-fprintf(stderr,"----------------%u NO_EAT--%lld\n", name, get_time_ms() - start);
-fflush(NULL);
+/*fprintf(stderr,"----------------%u NO_EAT--%lld\n", name, get_time_ms() - start);
+fflush(NULL);*/
 		pthread_mutex_unlock(mutex_state);
 		return (FALSE);
 	}
@@ -54,7 +54,7 @@ void *philo_routine(void *sc)
         //take first fork
 		if(scope->first_fork == NULL)
 			return (sc);
-		while(!call_observer(scope->state, scope->mutex_state, scope->name, start_time))
+		while(!call_observer(scope->state, scope->mutex_state, scope->name))
 		{
 			usleep(RECALL_WAIT);
 		}
@@ -62,13 +62,16 @@ void *philo_routine(void *sc)
 		if(monitor(scope,  start_time, " has taken a fork\n"))
 		{
 			pthread_mutex_unlock(scope->first_fork);
-printf("monitor fallo en philo_routine (l66)");
-fflush(NULL);
+//printf("monitor fallo en philo_routine (l66)");
+//fflush(NULL);
 			return (sc);
 		}
         //take second fork
-		if(scope->first_fork == NULL)
+		if(scope->second_fork == NULL)
+		{
+			pthread_mutex_unlock(scope->first_fork);
 			return (sc);
+		}
 		pthread_mutex_lock(scope->second_fork);
 		if(monitor(scope,  start_time, " has taken a fork\n"))
 		{

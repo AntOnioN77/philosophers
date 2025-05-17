@@ -132,10 +132,10 @@ test_valgrind() {
     fi
     
     echo -e "\n${YELLOW}Testing:${NC} $test_name"
-    echo "Command: $VALGRIND_CMD --leak-check=full --show-leak-kinds=all $PHILO $args"
-    
-    output=$($VALGRIND_CMD --leak-check=full --show-leak-kinds=all --error-exitcode=1 \
-           $TIMEOUT_CMD 5s $PHILO $args 2>&1)
+    echo "Command: $TIMEOUT_CMD 5s $VALGRIND_CMD --leak-check=full --show-leak-kinds=all --error-exitcode=1 $PHILO $args"
+
+    output=$($TIMEOUT_CMD 5s $VALGRIND_CMD --leak-check=full --show-leak-kinds=all --error-exitcode=1 \
+           $PHILO $args 2>&1)
     valgrind_exit=$?
     
     # Save output for debugging
@@ -216,12 +216,29 @@ main() {
     test_death 5 100 100 100 "Five philosophers - one should die" 1
     
     # Test 3: Survival tests
-    print_header "Survival Tests"
-    test_death 2 400 100 100 "Two philosophers should survive" 0
-    test_death 3 400 100 100 "Three philosophers should survive" 0
-    test_death 4 410 200 200 "Four philosophers should survive" 0
-    test_death 5 800 200 200 "Five philosophers should survive" 0
-    
+    print_header "Survival Tests (medium times)"
+    test_death 2 203 100 100 "Two philosophers should survive" 0
+    test_death 3 303 100 100 "Three philosophers should survive" 0
+    test_death 4 403 200 200 "Four philosophers should survive" 0
+    test_death 5 603 200 200 "Five philosophers should survive" 0
+    print_header "Survival Tests (litel times)"
+    test_death 2 23 10 10 "Two philosophers should survive" 0
+    test_death 3 33 10 10 "Three philosophers should survive" 0
+    test_death 4 43 20 20 "Four philosophers should survive" 0
+    test_death 5 63 20 20 "Five philosophers should survive" 0
+        print_header "Survival Tests (many people)"
+    test_death 100 26 10 10 "all should survive" 0
+    test_death 101 36 10 10 "all should survive" 0
+    test_death 100 46 20 20 "Four philosophers should survive" 0
+    test_death 100 203 100 100 "all should survive" 0
+    test_death 101 303 100 100 "all should survive" 0
+    test_death 100 403 200 150 "Four philosophers should survive" 0
+        print_header "Survival Tests (async)"
+    test_death 5 63 20 7 "Five philosophers should survive" 0
+    test_death 2 203 100 35 "Two philosophers should survive" 0
+    test_death 11 303 100 200 "Three philosophers should survive" 0
+    test_death 4 303 100 200 "Four philosophers should survive" 0
+    test_death 5 603 200 200 "Five philosophers should survive" 0
     # Test 4: Eat count tests
     print_header "Eat Count Tests"
     test_eat_count 3 400 100 100 3 "3 philosophers eat 3 times"
