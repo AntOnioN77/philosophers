@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/16 15:59:06 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/17 15:15:21 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,32 @@ void	end_all_philos(pthread_mutex_t *mutex_state_array,
 	}
 }
 
+void stablish_order(int *arr, int prev, int this, int next)
+{
+	arr[0] = prev;
+	arr[1] = this;
+	arr[2] = next;
+	int i = 0;
+	while (i < 2) {
+		int j = i + 1;
+		while (j < 3) {
+			if (arr[i] > arr[j]) {
+				int tmp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
 void	neighborhood_update(pthread_mutex_t *mutex_state_array, t_states *state_array,
 	unsigned int this, unsigned int num_of_philo)
 {
 	int	prev;
 	int	next;
+	int idx [3];
 
 	//pthread_mutex_lock(&(mutex_state_array[this]));
 	//if(state_array[this] == EATING)
@@ -42,26 +63,33 @@ void	neighborhood_update(pthread_mutex_t *mutex_state_array, t_states *state_arr
 	next = (this + 1) % num_of_philo;
 	//printf("prev:%d, this:%d, next:%d\n", prev, this, next);
 
+	stablish_order(idx,prev, this, next);
+
+/*printf("idx[0]:%d idx[1]:%d idx[2]:%d\n", idx[0], idx[1],idx[2]);
+fflush(NULL);*/
+	pthread_mutex_lock(&(mutex_state_array[idx[0]]));
+	pthread_mutex_lock(&(mutex_state_array[idx[1]]));
+	pthread_mutex_lock(&(mutex_state_array[idx[2]]));
 	if(state_array[this] == EATING)
 	{
 		//prevenimos que coma dos veces seguidas retirando el permiso.
 		if (state_array[this] == EATING)
 			state_array[this] = NO_EAT;
 		//damos permiso al philosofo a su derecha
-		pthread_mutex_lock(&(mutex_state_array[prev]));
 		if(state_array[prev] == NO_EAT)
 			state_array[prev] = ALMOST_EAT;
 		else if (state_array[prev] == ALMOST_EAT)
 			state_array[prev] = YES_EAT;
-		pthread_mutex_unlock(&(mutex_state_array[prev]));
 		//damos permiso al philosofo a su izquierda
-		pthread_mutex_lock(&(mutex_state_array[next]));
+		
 		if(state_array[next] == NO_EAT)
 			state_array[next] = ALMOST_EAT;
 		else if (state_array[next] == ALMOST_EAT)
 			state_array[next] = YES_EAT;
-		pthread_mutex_unlock(&(mutex_state_array[next]));
 	}
+	pthread_mutex_unlock(&(mutex_state_array[idx[2]]));
+	pthread_mutex_unlock(&(mutex_state_array[idx[1]]));
+	pthread_mutex_unlock(&(mutex_state_array[idx[0]]));
 }
 
 int check_survivors(t_world *world, long long *dead_date_arr)
@@ -106,8 +134,9 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 		}
 		else
 			ended++;
-		neighborhood_update(world->mutex_state_array, world->state_array, i, n);
 		pthread_mutex_unlock(&(world->mutex_state_array[i]));
+		neighborhood_update(world->mutex_state_array, world->state_array, i, n);
+		
 		i++;
 	}
 	if (dead || ended == n)
