@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:40:31 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/15 14:40:55 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/17 11:28:48 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int validate_args(int argc, char **argv)
         printf("Error: Invalid number of arguments.\n");
         return (1);
     }
-      n_philos = ft_atol(argv[1]);
-    if(!is_in_bounds(argv[1]) || n_philos > 500 || n_philos <= 0)
+    n_philos = ft_atol(argv[1]);
+    if(!is_in_bounds(argv[1]) || n_philos > 200 || n_philos <= 0)
     {
         printf("Error: 1º Argument is not a valid number.\n");
         printf("MAX:500\nMIN:0\nDo not use letters, spaces, commas or dots.\n");
@@ -42,7 +42,7 @@ int validate_args(int argc, char **argv)
     }
     if(argc == 6 && !is_in_bounds(argv[5]))
     {
-        printf("Error: 1º Argument is not a valid number.\n");
+        printf("Error: 5º Argument is not a valid number.\n");
         printf("MAX:2147483647\nMIN:0\nDo not use letters, spaces, commas or dots.\n");
         return (1);
     }
