@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/17 15:15:21 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:34:19 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,10 @@ void	neighborhood_update(pthread_mutex_t *mutex_state_array, t_states *state_arr
 
 /*printf("idx[0]:%d idx[1]:%d idx[2]:%d\n", idx[0], idx[1],idx[2]);
 fflush(NULL);*/
-	pthread_mutex_lock(&(mutex_state_array[idx[0]]));
-	pthread_mutex_lock(&(mutex_state_array[idx[1]]));
+	if (idx[0] != idx[1] && idx[0] != idx[2])
+		pthread_mutex_lock(&(mutex_state_array[idx[0]])); //para que con num_of_philo = 2 no se cierre dos veces el mismo mutex
+	if (idx[1] != idx[2])
+		pthread_mutex_lock(&(mutex_state_array[idx[1]])); //para que con num_of_philo = 2 no se cierre dos veces el mismo mutex
 	pthread_mutex_lock(&(mutex_state_array[idx[2]]));
 	if(state_array[this] == EATING)
 	{
@@ -88,8 +90,10 @@ fflush(NULL);*/
 			state_array[next] = YES_EAT;
 	}
 	pthread_mutex_unlock(&(mutex_state_array[idx[2]]));
-	pthread_mutex_unlock(&(mutex_state_array[idx[1]]));
-	pthread_mutex_unlock(&(mutex_state_array[idx[0]]));
+	if (idx[1] != idx[2])
+		pthread_mutex_unlock(&(mutex_state_array[idx[1]]));
+	if (idx[0] != idx[1] && idx[0] != idx[2])
+		pthread_mutex_unlock(&(mutex_state_array[idx[0]]));
 }
 
 int check_survivors(t_world *world, long long *dead_date_arr)

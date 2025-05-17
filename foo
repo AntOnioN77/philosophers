@@ -1,0 +1,39 @@
+    test_hellgrind "4 410 200 200 5" "Memory leaks with eat count"
+    test_hellgrind "4 200 100 100" "Memory leaks with death"
+    # Memory leak tests for all survival tests (medium times)
+    test_hellgrind "2 203 100 100" "Memory leaks - 2 philosophers should survive (medium times)"
+    test_hellgrind "3 303 100 100" "Memory leaks - 3 philosophers should survive (medium times)"
+    test_hellgrind "4 403 200 200" "Memory leaks - 4 philosophers should survive (medium times)"
+    test_hellgrind "5 603 200 200" "Memory leaks - 5 philosophers should survive (medium times)"
+
+    # Memory leak tests for all survival tests (litel times)
+    test_hellgrind "2 23 10 10" "Memory leaks - 2 philosophers should survive (litel times)"
+    test_hellgrind "3 33 10 10" "Memory leaks - 3 philosophers should survive (litel times)"
+    test_hellgrind "4 43 20 20" "Memory leaks - 4 philosophers should survive (litel times)"
+    test_hellgrind "5 63 20 20" "Memory leaks - 5 philosophers should survive (litel times)"
+
+    # Memory leak tests for all survival tests (many people)
+    test_hellgrind "100 26 10 10" "Memory leaks - 100 philosophers should survive (many people)"
+    test_hellgrind "101 36 10 10" "Memory leaks - 101 philosophers should survive (many people)"
+    test_hellgrind "100 46 20 20" "Memory leaks - 100 philosophers should survive (many people)"
+    test_hellgrind "100 203 100 100" "Memory leaks - 100 philosophers should survive (many people)"
+    test_hellgrind "101 303 100 100" "Memory leaks - 101 philosophers should survive (many people)"
+    test_hellgrind "100 403 200 150" "Memory leaks - 100 philosophers should survive (many people)"
+
+    # Memory leak tests for all survival tests (async)
+    test_hellgrind "5 63 20 7" "Memory leaks - 5 philosophers should survive (async)"
+    test_hellgrind "2 203 100 35" "Memory leaks - 2 philosophers should survive (async)"
+    test_hellgrind "11 303 100 200" "Memory leaks - 11 philosophers should survive (async)"
+    test_hellgrind "4 303 100 200" "Memory leaks - 4 philosophers should survive (async)"
+    test_hellgrind "5 603 200 200" "Memory leaks - 5 philosophers should survive (async)"
+    test_hellgrind "11 206 3 200" "Memory leaks - 11 philosophers should survive (async)"
+
+    # Existing memory leak tests for eat count, edge, and performance
+    test_hellgrind "3 400 100 100 3" "Memory leaks - 3 philosophers eat 3 times"
+    test_hellgrind "4 410 200 200 5" "Memory leaks - 4 philosophers eat 5 times"
+    test_hellgrind "5 800 200 200 7" "Memory leaks - 5 philosophers eat 7 times"
+    test_hellgrind "2 400 100 100 10" "Memory leaks - 2 philosophers eat 10 times"
+    test_hellgrind "3 400 100 100 1" "Memory leaks - Eat only once"
+    test_hellgrind "4 410 200 200 100" "Memory leaks - Eat many times"
+    test_hellgrind "199 800 200 200 5" "Memory leaks - Many philosophers (199)"
+    test_hellgrind "200 800 200 200 5" "Memory leaks - Maximum philosophers (200)"

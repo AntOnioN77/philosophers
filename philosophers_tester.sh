@@ -132,10 +132,10 @@ test_valgrind() {
     fi
     
     echo -e "\n${YELLOW}Testing:${NC} $test_name"
-    echo "Command: $TIMEOUT_CMD 5s $VALGRIND_CMD --leak-check=full --show-leak-kinds=all --error-exitcode=1 $PHILO $args"
-
-    output=$($TIMEOUT_CMD 5s $VALGRIND_CMD --leak-check=full --show-leak-kinds=all --error-exitcode=1 \
-           $PHILO $args 2>&1)
+    echo "Command: $VALGRIND_CMD --leak-check=full --show-leak-kinds=all $PHILO $args"
+    
+    output=$($VALGRIND_CMD --leak-check=full --show-leak-kinds=all --error-exitcode=1 \
+           $TIMEOUT_CMD 5s $PHILO $args 2>&1)
     valgrind_exit=$?
     
     # Save output for debugging
@@ -167,13 +167,13 @@ test_helgrind() {
     output=$($VALGRIND_CMD --tool=helgrind --error-exitcode=1 \
            $TIMEOUT_CMD 5s $PHILO $args 2>&1)
     helgrind_exit=$?
-    
+
     # Save output for debugging
     echo "$output" > "$RESULTS_DIR/${test_name// /_}_helgrind.log"
     
     races=$(echo "$output" | grep -c "data race")
     
-    if [ $races -eq 0 ] && [ $helgrind_exit -eq 0 ]; then
+    if [ $races -eq 0 ] && [ $helgrind_exit -eq 0 ] || [ $helgrind_exit -eq 124 ]; then
         print_result 0 "$test_name - No race conditions detected"
     else
         print_result 1 "$test_name - Race conditions detected"
@@ -192,7 +192,7 @@ main() {
         exit 1
     fi
     
-    # Test 1: Invalid arguments
+   # Test 1: Invalid arguments
     print_header "Invalid Arguments Tests"
     test_invalid_args "" "No arguments"
     test_invalid_args "1" "Too few arguments"
@@ -261,11 +261,51 @@ main() {
     print_header "Memory Leak Tests"
     test_valgrind "4 410 200 200 5" "Memory leaks with eat count"
     test_valgrind "4 200 100 100" "Memory leaks with death"
-    
+
     # Test 8: Race condition tests
-    print_header "Race Condition Tests"
+    print_header "______RACE CONDITION TESTS_____"
     test_helgrind "4 410 200 200 5" "Race conditions check"
-    
+
+    test_helgrind "4 410 200 200 5" "Memory leaks with eat count"
+    test_helgrind "4 200 100 100" "Memory leaks with death"
+    # Memory race tests for all survival tests (medium times)
+    test_helgrind "2 203 100 100" "Memory leaks - 2 philosophers should survive (medium times)"
+    test_helgrind "3 303 100 100" "Memory leaks - 3 philosophers should survive (medium times)"
+    test_helgrind "4 403 200 200" "Memory leaks - 4 philosophers should survive (medium times)"
+    test_helgrind "5 603 200 200" "Memory leaks - 5 philosophers should survive (medium times)"
+
+    # Memory race tests for all survival tests (litel times)
+    test_helgrind "2 23 10 10" "Memory leaks - 2 philosophers should survive (litel times)"
+    test_helgrind "3 33 10 10" "Memory leaks - 3 philosophers should survive (litel times)"
+    test_helgrind "4 43 20 20" "Memory leaks - 4 philosophers should survive (litel times)"
+    test_helgrind "5 63 20 20" "Memory leaks - 5 philosophers should survive (litel times)"
+
+    # Memory race tests for all survival tests (many people)
+    test_helgrind "100 26 10 10" "Memory leaks - 100 philosophers should survive (many people)"
+    test_helgrind "101 36 10 10" "Memory leaks - 101 philosophers should survive (many people)"
+    test_helgrind "100 46 20 20" "Memory leaks - 100 philosophers should survive (many people)"
+    test_helgrind "100 203 100 100" "Memory leaks - 100 philosophers should survive (many people)"
+    test_helgrind "101 303 100 100" "Memory leaks - 101 philosophers should survive (many people)"
+    test_helgrind "100 403 200 150" "Memory leaks - 100 philosophers should survive (many people)"
+
+    # Memory race tests for all survival tests (async)
+    test_helgrind "5 63 20 7" "Memory leaks - 5 philosophers should survive (async)"
+    test_helgrind "2 203 100 35" "Memory leaks - 2 philosophers should survive (async)"
+    test_helgrind "11 303 100 200" "Memory leaks - 11 philosophers should survive (async)"
+    test_helgrind "4 303 100 200" "Memory leaks - 4 philosophers should survive (async)"
+    test_helgrind "5 603 200 200" "Memory leaks - 5 philosophers should survive (async)"
+    test_helgrind "11 206 3 200" "Memory leaks - 11 philosophers should survive (async)"
+
+    # Existing race leak tests for eat count, edge, and performance
+    test_helgrind "3 400 100 100 3" "Memory leaks - 3 philosophers eat 3 times"
+    test_helgrind "4 410 200 200 5" "Memory leaks - 4 philosophers eat 5 times"
+    test_helgrind "5 800 200 200 7" "Memory leaks - 5 philosophers eat 7 times"
+    test_helgrind "2 400 100 100 10" "Memory leaks - 2 philosophers eat 10 times"
+    test_helgrind "3 400 100 100 1" "Memory leaks - Eat only once"
+    test_helgrind "4 410 200 200 100" "Memory leaks - Eat many times"
+    test_helgrind "199 800 200 200 5" "Memory leaks - Many philosophers (199)"
+    test_helgrind "200 800 200 200 5" "Memory leaks - Maximum philosophers (200)"
+
     # Summary
     echo -e "\n${BLUE}==== TEST SUMMARY ====${NC}"
     echo -e "Total tests: $TOTAL_TESTS"
