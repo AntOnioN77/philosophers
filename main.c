@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 12:26:30 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/18 12:36:08 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,10 @@ void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[])
 	time_to_die = (long) argx[TIME_TO_DIE];
 
 // ESTE ALGORITMO ES PARA IMPARES, se puede optimizar para que los pares piensen mas tiempo
-	if(argx[NUM_OF_PHILO] % 2 != 0)
-	{
-
-printf("main 47 IMPAR numero de philosofos\n");
-fflush(NULL);
-		if(time_to_sleep < (time_to_eat * 2))
-			total = (time_to_die - time_to_eat - ((time_to_eat * 2) - time_to_sleep)) * 1000;
-		else
-			total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
-	}
-	else
-	{
-printf("main 47 PAR numero de philosofos\n");
-fflush(NULL);
-		total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
-	}
+	total = time_to_die - time_to_eat - time_to_sleep;
 
 	if(total - delay > 0)
-		*tinking_time = (unsigned int) (total - delay);
+		*tinking_time = (unsigned int) ((total - delay) * 1000);
 	else
 		*tinking_time = 0;	
 

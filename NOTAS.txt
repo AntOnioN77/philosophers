@@ -4,3 +4,9 @@ NO LIBFT
 
 formula del tiempo pensando: TIME_TO_DIE - (TIME_TO_EAT * 3 + TIME_TO_SLEEP) - (DELAY_FACTOR * NUM_OF_PHILO)
 si es negativo no hacer usleep();
+
+comando ordenar:
+<out sort -n -k1,1 > out.shorted
+
+comando Hellgrind
+valgrind --tool=helgrind ./philosophers 2 203 100 35

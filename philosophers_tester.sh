@@ -192,6 +192,53 @@ main() {
         exit 1
     fi
     
+   # Test 1: Invalid arguments
+    print_header "Invalid Arguments Tests"
+    test_invalid_args "" "1. No arguments"
+    test_invalid_args "1" "2. Too few arguments"
+    test_invalid_args "1 2" "3. Too few arguments"
+    test_invalid_args "1 2 3" "4. Too few arguments"
+    test_invalid_args "0 200 100 100" "5. Zero philosophers"
+    test_invalid_args "-1 200 100 100" "6. Negative philosophers"
+    test_invalid_args "1 -200 100 100" "7. Negative time_to_die"
+    test_invalid_args "1 200 -100 100" "8. Negative time_to_eat"
+    test_invalid_args "1 200 100 -100" "9. Negative time_to_sleep"
+    test_invalid_args "1 200 100 100 -1" "10. Negative must_eat"
+    test_invalid_args "abc 200 100 100" "11. Non-numeric argument"
+    test_invalid_args "201 200 100 100" "12. Too many philosophers"
+    
+    # Test 2: Death tests
+    print_header "Death Tests"
+    test_death 1 200 100 100 "13. One philosopher should die" 1
+    test_death 2 100 200 200 "14. Two philosophers should die quickly" 1
+    test_death 3 100 150 150 "15. Three philosophers - one should die" 1
+    test_death 4 310 200 100 "16. Four philosophers - one should die" 1
+    test_death 5 100 100 100 "17. Five philosophers - one should die" 1
+    
+    # Test 3: Survival tests
+    print_header "Survival Tests (medium times)"
+    test_death 2 203 100 100 "18. Two philosophers should survive" 0
+    test_death 3 303 100 100 "19. Three philosophers should survive" 0
+    test_death 4 403 200 200 "20. Four philosophers should survive" 0
+    test_death 5 603 200 200 "21. Five philosophers should survive" 0
+    print_header "Survival Tests (litel times)"
+    test_death 2 23 10 10 "22. Two philosophers should survive" 0
+    test_death 3 33 10 10 "23. Three philosophers should survive" 0
+    test_death 4 43 20 20 "24. Four philosophers should survive" 0
+    test_death 5 63 20 20 "25. Five philosophers should survive" 0
+    print_header "Survival Tests (many people)"
+    test_death 100 26 10 10 "26. 100 philosophers should survive" 0
+    test_death 101 36 10 10 "27. 101 philosophers should survive" 0
+    test_death 100 46 20 20 "28. 100 philosophers should survive" 0
+    test_death 100 203 100 100 "29. 100 philosophers should survive" 0
+    test_death 101 303 100 100 "30. 101 philosophers should survive" 0
+    test_death 100 403 200 150 "31. 100 philosophers should survive" 0
+    print_header "Survival Tests (async)"
+    test_death 5 63 20 7 "32. Five philosophers should survive" 0
+    test_death 2 203 100 35 "33. Two philosophers should survive" 0
+    test_death 11 303 100 200 "34. Eleven philosophers should survive" 0
+    test_death 4 303 100 200 "35. Four philosophers should survive" 0
+    test_death 5 603 200 200 "36. Five philosophers should survive" 0
 
     # Test 4: Eat count tests
     print_header "Eat Count Tests"
@@ -204,7 +251,7 @@ main() {
     print_header "Edge Cases"
     test_death 1 400 200 200 "41. Single philosopher (should die)" 1
     test_eat_count 3 400 100 100 1 "42. Eat only once"
-    test_eat_count 4 410 200 200 100 "43. Eat many times"
+    test_eat_count 4 41 20 20 100 "43. Eat many times"
     
     # Test 6: Performance tests
     print_header "Performance Tests"
