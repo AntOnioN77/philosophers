@@ -192,119 +192,72 @@ main() {
         exit 1
     fi
     
-   # Test 1: Invalid arguments
-    print_header "Invalid Arguments Tests"
-    test_invalid_args "" "No arguments"
-    test_invalid_args "1" "Too few arguments"
-    test_invalid_args "1 2" "Too few arguments"
-    test_invalid_args "1 2 3" "Too few arguments"
-    test_invalid_args "0 200 100 100" "Zero philosophers"
-    test_invalid_args "-1 200 100 100" "Negative philosophers"
-    test_invalid_args "1 -200 100 100" "Negative time_to_die"
-    test_invalid_args "1 200 -100 100" "Negative time_to_eat"
-    test_invalid_args "1 200 100 -100" "Negative time_to_sleep"
-    test_invalid_args "1 200 100 100 -1" "Negative must_eat"
-    test_invalid_args "abc 200 100 100" "Non-numeric argument"
-    test_invalid_args "201 200 100 100" "Too many philosophers"
-    
-    # Test 2: Death tests
-    print_header "Death Tests"
-    test_death 1 200 100 100 "One philosopher should die" 1
-    test_death 2 100 200 200 "Two philosophers should die quickly" 1
-    test_death 3 100 150 150 "Three philosophers - one should die" 1
-    test_death 4 310 200 100 "Four philosophers - one should die" 1
-    test_death 5 100 100 100 "Five philosophers - one should die" 1
-    
-    # Test 3: Survival tests
-    print_header "Survival Tests (medium times)"
-    test_death 2 203 100 100 "Two philosophers should survive" 0
-    test_death 3 303 100 100 "Three philosophers should survive" 0
-    test_death 4 403 200 200 "Four philosophers should survive" 0
-    test_death 5 603 200 200 "Five philosophers should survive" 0
-    print_header "Survival Tests (litel times)"
-    test_death 2 23 10 10 "Two philosophers should survive" 0
-    test_death 3 33 10 10 "Three philosophers should survive" 0
-    test_death 4 43 20 20 "Four philosophers should survive" 0
-    test_death 5 63 20 20 "Five philosophers should survive" 0
-        print_header "Survival Tests (many people)"
-    test_death 100 26 10 10 "all should survive" 0
-    test_death 101 36 10 10 "all should survive" 0
-    test_death 100 46 20 20 "Four philosophers should survive" 0
-    test_death 100 203 100 100 "all should survive" 0
-    test_death 101 303 100 100 "all should survive" 0
-    test_death 100 403 200 150 "Four philosophers should survive" 0
-        print_header "Survival Tests (async)"
-    test_death 5 63 20 7 "Five philosophers should survive" 0
-    test_death 2 203 100 35 "Two philosophers should survive" 0
-    test_death 11 303 100 200 "Three philosophers should survive" 0
-    test_death 4 303 100 200 "Four philosophers should survive" 0
-    test_death 5 603 200 200 "Five philosophers should survive" 0
+
     # Test 4: Eat count tests
     print_header "Eat Count Tests"
-    test_eat_count 3 400 100 100 3 "3 philosophers eat 3 times"
-    test_eat_count 4 410 200 200 5 "4 philosophers eat 5 times"
-    test_eat_count 5 800 200 200 7 "5 philosophers eat 7 times"
-    test_eat_count 2 400 100 100 10 "2 philosophers eat 10 times"
+    test_eat_count 3 200 10 13 3 "37. 3 philosophers eat 3 times"
+    test_eat_count 4 210 27 20 5 "38. 4 philosophers eat 5 times"
+    test_eat_count 5 53 17 7 7 "39. 5 philosophers eat 7 times"
+    test_eat_count 2 84 9 73 10 "40. 2 philosophers eat 10 times"
     
     # Test 5: Edge cases
     print_header "Edge Cases"
-    test_death 1 400 200 200 "Single philosopher (should die)" 1
-    test_eat_count 3 400 100 100 1 "Eat only once"
-    test_eat_count 4 410 200 200 100 "Eat many times"
+    test_death 1 400 200 200 "41. Single philosopher (should die)" 1
+    test_eat_count 3 400 100 100 1 "42. Eat only once"
+    test_eat_count 4 410 200 200 100 "43. Eat many times"
     
     # Test 6: Performance tests
     print_header "Performance Tests"
-    test_eat_count 199 800 200 200 5 "Many philosophers (199)"
-    test_eat_count 200 800 200 200 5 "Maximum philosophers (200)"
+    test_eat_count 199 800 200 200 5 "44. Many philosophers (199)"
+    test_eat_count 200 800 200 200 5 "45. Maximum philosophers (200)"
     
     # Test 7: Memory leak tests
     print_header "Memory Leak Tests"
-    test_valgrind "4 410 200 200 5" "Memory leaks with eat count"
-    test_valgrind "4 200 100 100" "Memory leaks with death"
+    test_valgrind "4 410 200 200 5" "46. Memory leaks with eat count"
+    test_valgrind "4 200 100 100" "47. Memory leaks with death"
 
     # Test 8: Race condition tests
-    print_header "______RACE CONDITION TESTS_____"
-    test_helgrind "4 410 200 200 5" "Race conditions check"
-
-    test_helgrind "4 410 200 200 5" "Memory leaks with eat count"
-    test_helgrind "4 200 100 100" "Memory leaks with death"
+    print_header "Race Condition Tests"
+    test_helgrind "4 410 200 200 5" "48. Race conditions check"
+    test_helgrind "4 410 200 200 5" "49. Memory leaks with eat count"
+    test_helgrind "4 200 100 100" "50. Memory leaks with death"
     # Memory race tests for all survival tests (medium times)
-    test_helgrind "2 203 100 100" "Memory leaks - 2 philosophers should survive (medium times)"
-    test_helgrind "3 303 100 100" "Memory leaks - 3 philosophers should survive (medium times)"
-    test_helgrind "4 403 200 200" "Memory leaks - 4 philosophers should survive (medium times)"
-    test_helgrind "5 603 200 200" "Memory leaks - 5 philosophers should survive (medium times)"
+    test_helgrind "2 203 100 100" "51. Memory leaks - 2 philosophers should survive (medium times)"
+    test_helgrind "3 303 100 100" "52. Memory leaks - 3 philosophers should survive (medium times)"
+    test_helgrind "4 403 200 200" "53. Memory leaks - 4 philosophers should survive (medium times)"
+    test_helgrind "5 603 200 200" "54. Memory leaks - 5 philosophers should survive (medium times)"
 
     # Memory race tests for all survival tests (litel times)
-    test_helgrind "2 23 10 10" "Memory leaks - 2 philosophers should survive (litel times)"
-    test_helgrind "3 33 10 10" "Memory leaks - 3 philosophers should survive (litel times)"
-    test_helgrind "4 43 20 20" "Memory leaks - 4 philosophers should survive (litel times)"
-    test_helgrind "5 63 20 20" "Memory leaks - 5 philosophers should survive (litel times)"
+    test_helgrind "2 23 10 10" "55. Memory leaks - 2 philosophers should survive (litel times)"
+    test_helgrind "3 33 10 10" "56. Memory leaks - 3 philosophers should survive (litel times)"
+    test_helgrind "4 43 20 20" "57. Memory leaks - 4 philosophers should survive (litel times)"
+    test_helgrind "5 63 20 20" "58. Memory leaks - 5 philosophers should survive (litel times)"
 
     # Memory race tests for all survival tests (many people)
-    test_helgrind "100 26 10 10" "Memory leaks - 100 philosophers should survive (many people)"
-    test_helgrind "101 36 10 10" "Memory leaks - 101 philosophers should survive (many people)"
-    test_helgrind "100 46 20 20" "Memory leaks - 100 philosophers should survive (many people)"
-    test_helgrind "100 203 100 100" "Memory leaks - 100 philosophers should survive (many people)"
-    test_helgrind "101 303 100 100" "Memory leaks - 101 philosophers should survive (many people)"
-    test_helgrind "100 403 200 150" "Memory leaks - 100 philosophers should survive (many people)"
+    test_helgrind "100 26 10 10" "59. Memory leaks - 100 philosophers should survive (many people)"
+    test_helgrind "101 36 10 10" "60. Memory leaks - 101 philosophers should survive (many people)"
+    test_helgrind "100 46 20 20" "61. Memory leaks - 100 philosophers should survive (many people)"
+    test_helgrind "100 203 100 100" "62. Memory leaks - 100 philosophers should survive (many people)"
+    test_helgrind "101 303 100 100" "63. Memory leaks - 101 philosophers should survive (many people)"
+    test_helgrind "100 403 200 150" "64. Memory leaks - 100 philosophers should survive (many people)"
 
     # Memory race tests for all survival tests (async)
-    test_helgrind "5 63 20 7" "Memory leaks - 5 philosophers should survive (async)"
-    test_helgrind "2 203 100 35" "Memory leaks - 2 philosophers should survive (async)"
-    test_helgrind "11 303 100 200" "Memory leaks - 11 philosophers should survive (async)"
-    test_helgrind "4 303 100 200" "Memory leaks - 4 philosophers should survive (async)"
-    test_helgrind "5 603 200 200" "Memory leaks - 5 philosophers should survive (async)"
-    test_helgrind "11 206 3 200" "Memory leaks - 11 philosophers should survive (async)"
+    test_helgrind "5 63 20 7" "65. Memory leaks - 5 philosophers should survive (async)"
+    test_helgrind "2 203 100 35" "66. Memory leaks - 2 philosophers should survive (async)"
+    test_helgrind "11 303 100 200" "67. Memory leaks - 11 philosophers should survive (async)"
+    test_helgrind "4 303 100 200" "68. Memory leaks - 4 philosophers should survive (async)"
+    test_helgrind "5 603 200 200" "69. Memory leaks - 5 philosophers should survive (async)"
+    test_helgrind "11 206 3 200" "70. Memory leaks - 11 philosophers should survive (async)"
 
     # Existing race leak tests for eat count, edge, and performance
-    test_helgrind "3 400 100 100 3" "Memory leaks - 3 philosophers eat 3 times"
-    test_helgrind "4 410 200 200 5" "Memory leaks - 4 philosophers eat 5 times"
-    test_helgrind "5 800 200 200 7" "Memory leaks - 5 philosophers eat 7 times"
-    test_helgrind "2 400 100 100 10" "Memory leaks - 2 philosophers eat 10 times"
-    test_helgrind "3 400 100 100 1" "Memory leaks - Eat only once"
-    test_helgrind "4 410 200 200 100" "Memory leaks - Eat many times"
-    test_helgrind "199 800 200 200 5" "Memory leaks - Many philosophers (199)"
-    test_helgrind "200 800 200 200 5" "Memory leaks - Maximum philosophers (200)"
+    test_helgrind "3 400 100 100 3" "71. Memory leaks - 3 philosophers eat 3 times"
+    test_helgrind "4 410 200 200 5" "72. Memory leaks - 4 philosophers eat 5 times"
+    test_helgrind "5 800 200 200 7" "73. Memory leaks - 5 philosophers eat 7 times"
+    test_helgrind "2 400 100 100 10" "74. Memory leaks - 2 philosophers eat 10 times"
+    test_helgrind "3 400 100 100 1" "75. Memory leaks - Eat only once"
+    test_helgrind "4 410 200 200 100" "76. Memory leaks - Eat many times"
+    test_helgrind "199 800 200 200 5" "77. Memory leaks - Many philosophers (199)"
+    test_helgrind "200 800 200 200 5" "78. Memory leaks - Maximum philosophers (200)"
 
     # Summary
     echo -e "\n${BLUE}==== TEST SUMMARY ====${NC}"

@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/16 14:06:30 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/18 12:26:30 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,25 +50,18 @@ fflush(NULL);
 			total = (time_to_die - time_to_eat - ((time_to_eat * 2) - time_to_sleep)) * 1000;
 		else
 			total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
-		if(total - delay > 0)
-			*tinking_time = (unsigned int) (total - delay);
-		else
-			*tinking_time = 0;		
 	}
 	else
 	{
 printf("main 47 PAR numero de philosofos\n");
 fflush(NULL);
-		if(time_to_sleep < time_to_eat)
-			total = (time_to_die - time_to_eat - ((time_to_eat) - time_to_sleep)) * 1000;
-		else
-			total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
-			
-		if(total - delay > 0)
-			*tinking_time = (unsigned int) (total - delay);
-		else
-			*tinking_time = 0;	
+		total = (time_to_die - time_to_eat - time_to_sleep) * 1000;
 	}
+
+	if(total - delay > 0)
+		*tinking_time = (unsigned int) (total - delay);
+	else
+		*tinking_time = 0;	
 
 printf("main l46 tiniking_time:%u\n", *tinking_time);
 fflush(NULL);
