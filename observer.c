@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 21:48:37 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/18 22:11:09 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,13 +126,11 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 	unsigned int	i;
 	unsigned int	ended;
 	int				dead;
-	unsigned int	n;
 
-	n = world->argx[NUM_OF_PHILO];
 	i = 0;
 	ended = 0;
 	dead = 0;
-	while (i < n)
+	while (i < world->argx[NUM_OF_PHILO])
 	{
 		pthread_mutex_lock(&(world->mutex_state_array[i]));
 		if (world->state_array[i] !=THE_END)
@@ -140,34 +138,29 @@ int check_survivors(t_world *world, long long *dead_date_arr)
 		else
 			ended++;
 		pthread_mutex_unlock(&(world->mutex_state_array[i]));
-		neighborhood_update(world->mutex_state_array, world->state_array, i, n);
+		neighborhood_update(world->mutex_state_array, world->state_array, i,
+			world->argx[NUM_OF_PHILO]);
 		i++;
 	}
-	if (ended == n)
+	if (ended == world->argx[NUM_OF_PHILO])
 		return (1);
 	if (dead)
-	{
 		end_all_philos(world->mutex_state_array,
 			world->state_array, world->argx[NUM_OF_PHILO]);
-	}
 	return (0);
 }
 
-
-
-void    *observer_routine(void *world)
+void	*observer_routine(void *world)
 {
-	t_world *wo;
+	t_world	*wo;
 
 	wo = world;
-	usleep(wo->argx[TIME_TO_DIE] / 2);//necesario?
-	while(1)
+	usleep(wo->argx[TIME_TO_DIE] / 2);
+	while (1)
 	{
-
-		if(check_survivors(wo, wo->dead_date_arr))      
+		if (check_survivors(wo, wo->dead_date_arr))
 			return (NULL);
-		usleep(OBSERVER_PAUSE);//PRUEBAS SOLO?
+		usleep(OBSERVER_PAUSE);
 	}
-	return(NULL);
-
+	return (NULL);
 }

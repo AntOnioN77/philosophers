@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_lltoa.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 13:09:18 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/11 21:11:42 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/18 22:17:32 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ char	*ft_lltoa(long long n)
 int	main(void)
 {
     // Casos de prueba
-    long long test_cases[] = {0, 1, 42, LLONG_MAX, LLONG_MIN, 10, 100, 1000}; // Incluye el máximo valor de unsigned int
+    long long test_cases[] = {0, 1, 42, LLONG_MAX, LLONG_MIN, 10,
+		100, 1000}; // Incluye el máximo valor de unsigned int
     size_t num_cases = sizeof(test_cases) / sizeof(test_cases[0]);
     char *result;
 
@@ -94,7 +95,8 @@ int	main(void)
         }
         else
         {
-            printf("Input: %lld -> Output: NULL (Memory allocation failed)\n", test_cases[i]);
+            printf("Input: %lld -> Output: NULL (Memory allocation failed)\n",
+			test_cases[i]);
         }
     }
 
