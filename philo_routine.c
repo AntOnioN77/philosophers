@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/17 11:20:00 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:00:52 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,13 @@ void *philo_routine(void *sc)
 			return (sc);
 		while(!call_observer(scope->state, scope->mutex_state, scope->name))
 		{
+	printf("name:%d Is Waiting, state:%d\n",scope->name, *(scope->state));
+	fflush(NULL);
+
 			usleep(RECALL_WAIT);
 		}
+	printf("name:%d Is still loving you, state:%d\n",scope->name, *(scope->state));
+	fflush(NULL);
 		pthread_mutex_lock(scope->first_fork);
 		if(monitor(scope,  start_time, " has taken a fork\n"))
 		{

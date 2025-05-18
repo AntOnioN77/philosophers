@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 12:36:08 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/18 14:10:25 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	thread_join_all(pthread_t philosophers[], unsigned int n)
 	while (n > 0)
 	{
 		pthread_join(philosophers[n-1], &tread_ret);
+printf("joined name:%u", n);
+fflush(NULL);
 		free(tread_ret); //libera scoope, el hilo main es propietario de la memoria scoope
 		n--;
 	}

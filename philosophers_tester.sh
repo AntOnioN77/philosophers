@@ -217,6 +217,7 @@ main() {
     
     # Test 3: Survival tests
     print_header "Survival Tests (medium times)"
+    test_death 3 31 10 3 "17.5 Thre should survive"
     test_death 2 203 100 100 "18. Two philosophers should survive" 0
     test_death 3 303 100 100 "19. Three philosophers should survive" 0
     test_death 4 403 200 200 "20. Four philosophers should survive" 0

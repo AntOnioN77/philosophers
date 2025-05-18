@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 12:36:32 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/18 14:53:27 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ typedef int	t_bool;
 
 # define DELAY_FACTOR 3
 //# define EVEN_WAIT 150
-# define OBSERVER_PAUSE 5
-# define RECALL_WAIT 20
+# define OBSERVER_PAUSE 5//100//1//5
+# define RECALL_WAIT 500//20
 
 # define FALSE 0
 # define TRUE 1

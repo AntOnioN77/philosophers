@@ -12,5 +12,6 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false
-    }
+    },
+    "makefile.configureOnOpen": false
 }

@@ -1,2 +1,4 @@
 test_results*
 death_timing_results*
+*.o
+*.log
