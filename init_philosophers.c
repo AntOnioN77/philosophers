@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 12:02:46 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:31:30 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ int	init_philosophers(t_world *world)
 	if (reserve_memory(world, n_philos))
 		return (1);
 	world->start_date = get_time_ms();
-
-	// Initialize odd philosophers first
 	current = 1;
 	error = 0;
 	while (current <= n_philos)
@@ -43,22 +41,21 @@ int	init_philosophers(t_world *world)
 		}
 		current++;
 	}
-
 	return (0);
 }
 
 static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 {
-	world->philosophers =  malloc(sizeof(pthread_t) * num_of_philos);
+	world->philosophers = malloc(sizeof(pthread_t) * num_of_philos);
 	if (world->philosophers ==NULL)
 		return (1);
-	world->dead_date_arr =  malloc(sizeof(long long) * num_of_philos);
+	world->dead_date_arr = malloc(sizeof(long long) * num_of_philos);
 	if (world->dead_date_arr == NULL)
 	{
 		free(world->philosophers);
 		return (1);
 	}
-	world->state_array =  malloc(sizeof(t_states) * num_of_philos);
+	world->state_array = malloc(sizeof(t_states) * num_of_philos);
 	if (world->state_array == NULL)
 	{
 		free(world->philosophers);
@@ -69,10 +66,6 @@ static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 	return (0);
 }
 
-
-//El argumento philo_n recibe el numero del filosofo conforme esta numerado
-//en la mesa, en cambio los filosofos, al estar almacenados en un array
-//tienen un indice n-1 de manera que el filosofo 1 ocupa la posicion 0 del array;
 int	init_one_philo(t_world *world, unsigned int philo_n)
 {
 	pthread_t 		*new_philo;

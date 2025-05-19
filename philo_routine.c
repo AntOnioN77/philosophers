@@ -6,41 +6,38 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 12:18:32 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:40:28 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 
-t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state, unsigned int name)
+t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state,
+		unsigned int name)
 {
-name = name + 0;///BORARR
+	name = name + 0;
 	pthread_mutex_lock(mutex_state);
-	if(*state == YES_EAT || *state == THE_END)
+	if (*state == YES_EAT || *state == THE_END)
 	{
-/*fprintf(stderr,"----------------%u YES_EAT--%lld\n", name, get_time_ms() - start);
-fflush(NULL);*/
 		pthread_mutex_unlock(mutex_state);
-		return(TRUE);
+		return (TRUE);
 	}
 	else
 	{
-/*fprintf(stderr,"----------------%u NO_EAT--%lld\n", name, get_time_ms() - start);
-fflush(NULL);*/
 		pthread_mutex_unlock(mutex_state);
 		return (FALSE);
 	}
 }
 
-int take_first_fork(t_scope *scope)
+int	take_first_fork(t_scope *scope)
 {
-	if(scope->first_fork == NULL)
+	if (scope->first_fork == NULL)
 		return (1);
-	while(!call_observer(scope->state, scope->mutex_state, scope->name))
+	while (!call_observer(scope->state, scope->mutex_state, scope->name))
 		usleep(RECALL_WAIT);
 	pthread_mutex_lock(scope->first_fork);
-	if(monitor(scope,  scope->start_date, " has taken a fork\n"))
+	if (monitor(scope, scope->start_date, " has taken a fork\n"))
 	{
 		pthread_mutex_unlock(scope->first_fork);
 		return (1);
@@ -50,13 +47,13 @@ int take_first_fork(t_scope *scope)
 
 int	take_second_fork(t_scope *scope)
 {
-	if(scope->second_fork == NULL)
+	if (scope->second_fork == NULL)
 	{
 		pthread_mutex_unlock(scope->first_fork);
 		return (1);
 	}
 	pthread_mutex_lock(scope->second_fork);
-	if(monitor(scope,  scope->start_date, " has taken a fork\n"))
+	if (monitor(scope, scope->start_date, " has taken a fork\n"))
 	{
 		pthread_mutex_unlock(scope->first_fork);
 		pthread_mutex_unlock(scope->second_fork);
@@ -67,52 +64,52 @@ int	take_second_fork(t_scope *scope)
 
 int	and_eat(t_scope *scope, unsigned int *eats)
 {
-		pthread_mutex_lock(scope->dead_date_mutex); 		// -ML
-        *(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE]);	//
-		pthread_mutex_unlock(scope->dead_date_mutex);      		//-MU
-		if(monitor(scope,  scope->start_date, " is eating\n"))
-		{
-			pthread_mutex_unlock(scope->first_fork);
-			pthread_mutex_unlock(scope->second_fork);
-			return (1);
-		}
-		pthread_mutex_lock(scope->mutex_state);
-		*(scope->state) = EATING;
-		pthread_mutex_unlock(scope->mutex_state);
-		*eats = *eats + 1;
-		usleep(scope->argx[TIME_TO_EAT] * 1000);
+	pthread_mutex_lock(scope->dead_date_mutex);
+	*(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE]);
+	pthread_mutex_unlock(scope->dead_date_mutex);
+	if (monitor(scope, scope->start_date, " is eating\n"))
+	{
 		pthread_mutex_unlock(scope->first_fork);
 		pthread_mutex_unlock(scope->second_fork);
-		if(scope->argx[MAX_EATS] != 0 && *eats >= scope->argx[MAX_EATS])
-		{
-			pthread_mutex_lock(scope->mutex_state);
-			*(scope->state)= THE_END;
-			pthread_mutex_unlock(scope->mutex_state);
-			return (1);
-		}
-		return (0);
+		return (1);
+	}
+	pthread_mutex_lock(scope->mutex_state);
+	*(scope->state) = EATING;
+	pthread_mutex_unlock(scope->mutex_state);
+	*eats = *eats + 1;
+	usleep(scope->argx[TIME_TO_EAT] * 1000);
+	pthread_mutex_unlock(scope->first_fork);
+	pthread_mutex_unlock(scope->second_fork);
+	if (scope->argx[MAX_EATS] != 0 && *eats >= scope->argx[MAX_EATS])
+	{
+		pthread_mutex_lock(scope->mutex_state);
+		*(scope->state) = THE_END;
+		pthread_mutex_unlock(scope->mutex_state);
+		return (1);
+	}
+	return (0);
 }
 
-void *philo_routine(void *sc)
+void	*philo_routine(void *sc)
 {
-	t_scope	*scope;
+	t_scope			*scope;
 	unsigned int	eats;
 
 	scope = (t_scope *)sc;
 	eats = 0;
-	monitor(scope,  scope->start_date, " is thinking\n");
-	while(1)
+	monitor(scope, scope->start_date, " is thinking\n");
+	while (1)
 	{
-        if (take_first_fork(scope))
+		if (take_first_fork(scope))
 			return (sc);
-        if (take_second_fork(scope))
+		if (take_second_fork(scope))
 			return (sc);
-        if (and_eat(scope, &eats))
+		if (and_eat(scope, &eats))
 			return (sc);
-		if(monitor(scope,  scope->start_date, " is sleeping\n"))
+		if (monitor(scope, scope->start_date, " is sleeping\n"))
 			return (sc);
 		usleep(scope->argx[TIME_TO_SLEEP] * 1000);
-		if(monitor(scope,  scope->start_date, " is thinking\n"))
+		if (monitor(scope, scope->start_date, " is thinking\n"))
 			return (sc);
 		usleep(scope->tinking_time);
 	}
@@ -122,10 +119,10 @@ void *philo_routine(void *sc)
 
 long long	get_time_ms(void)
 {
-    struct timeval tv;    
+	struct timeval	tv;    
 
-    gettimeofday(&tv, NULL);
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
 int	monitor(t_scope *scp, long long start, char *msg)
@@ -143,19 +140,17 @@ int	monitor(t_scope *scp, long long start, char *msg)
 	pthread_mutex_unlock(scp->mutex_state);
 
 	pthread_mutex_lock(scp->dead_date_mutex);
-	if(time > *(scp->dead_date))
+	if (time > *(scp->dead_date))
 		good_bye = 1;
 	pthread_mutex_unlock(scp->dead_date_mutex);
 
-	if(good_bye)
-		return(1);
-
+	if (good_bye)
+		return (1);
 	full_msg = cmpmsg(start, time, scp->name, msg);
 	if (!full_msg)
 		return (1);
 	ft_putstr_fd(full_msg, 1);
 	free(full_msg);
-	
 	return (0);
 }
 
@@ -165,13 +160,13 @@ Si no pudo crearlo libera str_a y str_b y retorna null*/
 char	*join_check(char *str_a, char *str_b, char **result)
 {
 	*result = ft_strjoin(str_a, str_b);
-	if(*result == NULL)
+	if (*result == NULL)
 	{
 		free(str_a);
 		free(str_b);
-		return(NULL);
+		return (NULL);
 	}
-	return(*result);
+	return (*result);
 }
 
 char	*cmpmsg(long long start, long long time, unsigned int n, char *msg)
@@ -181,22 +176,20 @@ char	*cmpmsg(long long start, long long time, unsigned int n, char *msg)
 	char	*name;
 
 	time = time - start;
-	/*if(time > LLONG_MAX || n > _MAX)
-		return(NULL);*/
 	aux = ft_lltoa(time);
-	if(aux == NULL)
-		return(NULL);
-	if(!join_check(aux, " ", &(full_msg)))
+	if (aux == NULL)
+		return (NULL);
+	if (!join_check(aux, " ", &(full_msg)))
 		return (NULL);
 	free(aux);
-	name = ft_lltoa(n); //estaria bien almacenar el nombre en la funcion llamadora, para no tener que hacer itoa cada vez que halla que imprimir algo
-	if(name == NULL)
-		return(NULL);
-	if(!join_check(full_msg, name, &(aux)))
-		return(NULL);
+	name = ft_lltoa(n);
+	if (name == NULL)
+		return (NULL);
+	if (!join_check(full_msg, name, &(aux)))
+		return (NULL);
 	free(full_msg);
 	free(name);
 	full_msg = ft_strjoin(aux, msg);
 	free(aux);
-	return(full_msg);
+	return (full_msg);
 }
