@@ -6,11 +6,12 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:40:31 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 15:05:59 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:42:27 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
 static int	validate_philosopher_count(char *arg)
 {
 	long	n_philos;
