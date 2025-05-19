@@ -6,12 +6,13 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 13:09:18 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 22:17:32 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:31:13 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <limits.h>
+
 static int	countchr(long long n)
 {
 	int			n_chars;

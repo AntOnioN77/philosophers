@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 13:41:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 22:16:53 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:25:44 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 static int	reserve_memory(t_world *world, int num_of_philos);
 static int	init_mutex(t_world *world, int num_of_philos);
 void		destroy_arr_mutex(pthread_mutex_t forks[], unsigned int count);
-int			init_forks(t_world *world, unsigned int num_of_philos);
+int			init_mutex_arr(pthread_mutex_t *mutex_arr,
+				unsigned int num_of_philos);
 
 int	create_mutexes(t_world *world)
 {
@@ -58,46 +59,32 @@ static int	reserve_memory(t_world *world, int num_of_philos)
 
 static int	init_mutex(t_world *world, int num_of_philos)
 {
-	int	i;
-
-	if (init_forks(world, num_of_philos))
+	if (init_mutex_arr(world->forks, num_of_philos))
 		return (1);
-	i = 0;
-	while (i < num_of_philos)
+	if (init_mutex_arr(world->dead_date_mutex_arr, num_of_philos))
 	{
-		if (pthread_mutex_init(&(world->dead_date_mutex_arr[i]), NULL))
-		{
-			destroy_arr_mutex(world->forks, num_of_philos);
-			destroy_arr_mutex(world->dead_date_mutex_arr, i);
-			return (1);
-		}
-		i++;
+		destroy_arr_mutex(world->forks, num_of_philos);
+		return (1);
 	}
-	i = 0;
-	while (i < num_of_philos)
+	if (init_mutex_arr(world->mutex_state_array, num_of_philos))
 	{
-		if (pthread_mutex_init(&(world->mutex_state_array[i]), NULL))
-		{
-			destroy_arr_mutex(world->forks, num_of_philos);
-			destroy_arr_mutex(world->dead_date_mutex_arr, num_of_philos - 1);
-			destroy_arr_mutex(world->mutex_state_array, i);
-			return (1);
-		}
-		i++;
+		destroy_arr_mutex(world->forks, num_of_philos);
+		destroy_arr_mutex(world->dead_date_mutex_arr, num_of_philos - 1);
+		return (1);
 	}
 	return (0);
 }
 
-int	init_forks(t_world *world, unsigned int num_of_philos)
+int	init_mutex_arr(pthread_mutex_t *mut_arr, unsigned int num_of_philos)
 {
 	unsigned int	i;
 
 	i = 0;
 	while (i < num_of_philos)
 	{
-		if (pthread_mutex_init(&(world->forks[i]), NULL))
+		if (pthread_mutex_init(&(mut_arr[i]), NULL))
 		{
-			destroy_arr_mutex(world->forks, i);
+			destroy_arr_mutex(mut_arr, i);
 			return (1);
 		}
 		i++;

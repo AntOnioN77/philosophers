@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 13:31:30 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:33:33 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	init_philosophers(t_world *world)
 static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 {
 	world->philosophers = malloc(sizeof(pthread_t) * num_of_philos);
-	if (world->philosophers ==NULL)
+	if (world->philosophers == NULL)
 		return (1);
 	world->dead_date_arr = malloc(sizeof(long long) * num_of_philos);
 	if (world->dead_date_arr == NULL)
@@ -68,18 +68,17 @@ static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 
 int	init_one_philo(t_world *world, unsigned int philo_n)
 {
-	pthread_t 		*new_philo;
-	t_scope	*scope;
+	pthread_t	*new_philo;
+	t_scope		*scope;
 
 	philo_n--;
 
 	world->dead_date_arr[philo_n] = (world->argx[TIME_TO_DIE]) + world->start_date;
 	scope = scoop_of_this_philo(world, philo_n);
-	if( scope == NULL)
+	if (scope == NULL)
 		return (1);
 	new_philo = &(world->philosophers[philo_n]);
-	
-	if(pthread_create(new_philo, NULL, philo_routine, scope))
+	if (pthread_create(new_philo, NULL, philo_routine, scope))
 		return (1);
 	return (0);
 
@@ -88,8 +87,8 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 
 //cambiar nombre, establece dos cosas, que tenedor usara primero pero tambien, si al inicio tendra permiso para comer.
 //TODO abdtraer la logica izquierda derecha y resolver todo lo relativo a los tenedores en esta funcion
-void	stablish_order_forks(unsigned int name, t_scope *scope, pthread_mutex_t *left,
-	pthread_mutex_t *rigth)
+void	stablish_order_forks(unsigned int name, t_scope *scope,
+		pthread_mutex_t *left, pthread_mutex_t *rigth)
 {
 	if ((name % 2) == 0)
 	{
@@ -107,7 +106,7 @@ void	stablish_order_forks(unsigned int name, t_scope *scope, pthread_mutex_t *le
 
 t_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 {
-	t_scope	*scope;
+	t_scope			*scope;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*rigth;
 
@@ -127,15 +126,16 @@ t_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 	scope->dead_date = &(world->dead_date_arr[philo_n]);
 	scope->dead_date_mutex = &(world->dead_date_mutex_arr[philo_n]);
 
-	scope->tinking_time =world->tinking_time;//  ((world->argx[TIME_TO_EAT] - world->argx[TIME_TO_SLEEP]) * 1000);
+	scope->tinking_time = world->tinking_time;
 	return (scope);
 }
 
-pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n, unsigned int total_philo)
+pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n,
+				unsigned int total_philo)
 {
-	if(total_philo == 1)
+	if (total_philo == 1)
 		return (NULL);
-	if(philo_n == 0)
+	if (philo_n == 0)
 		return (&(forks[total_philo -1]));
 	else
 		return (&(forks[philo_n -1]));
