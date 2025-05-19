@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 12:27:53 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:43:48 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ typedef int	t_bool;
 
 # define TEST 0
 # define DELAY_FACTOR 3
-//# define EVEN_WAIT 150
 # define OBSERVER_PAUSE 5//100//1//5
 # define RECALL_WAIT 500//20
 # define FALSE 0
@@ -56,12 +55,12 @@ typedef enum e_states
 typedef struct s_world
 {
 	unsigned int	argx[5];
-	long long		*dead_date_arr;		// array
-	pthread_mutex_t	*dead_date_mutex_arr;	// array
-	pthread_t		*philosophers;	// array
+	long long		*dead_date_arr;
+	pthread_mutex_t	*dead_date_mutex_arr;
+	pthread_t		*philosophers;
 	long long		start_date;
 	pthread_t		observer;
-	pthread_mutex_t	*forks;			// array
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	*mutex_state_array;
 	t_states		*state_array;
 	unsigned int	tinking_time;
@@ -99,7 +98,8 @@ long long		get_time_ms(void);
 void			destroy_arr_mutex(pthread_mutex_t forks[], unsigned int count);
 t_bool			valid_amount_ms(char *num);
 t_bool			is_in_bounds(char *num);
-t_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n);
+t_scope			*scoop_of_this_philo(t_world *world,
+					unsigned int philo_n);
 pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n,
 					unsigned int total_philo);
 size_t			ft_strlen(const char *s);

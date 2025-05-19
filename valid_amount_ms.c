@@ -6,11 +6,11 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:07:40 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/12 16:14:28 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:44:57 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "philosophers.h"
+#include "philosophers.h"
 
 int	ft_isdigit(int c)
 {
@@ -57,12 +57,12 @@ t_bool	valid_amount_ms(char *num)
 	i = 0;
 	sign = FALSE;
 	if (num[0] == '-')
-        return (FALSE);
-    else if(num[0] == '+')
-    {
-        sign = TRUE;
-        i++;
-    }
+		return (FALSE);
+	else if (num[0] == '+')
+	{
+		sign = TRUE;
+		i++;
+	}
 	while (ft_isdigit(num[i]))
 		i++;
 	if ((i - sign) < 1 || i != ft_strlen(num))
@@ -84,12 +84,12 @@ t_bool	is_in_bounds(char *num)
 	i = 0;
 	sign = FALSE;
 	if (num[0] == '-')
-        return (FALSE);
-    else if(num[0] == '+')
-    {
-        sign = TRUE;
-        i++;
-    }
+		return (FALSE);
+	else if (num[0] == '+')
+	{
+		sign = TRUE;
+		i++;
+	}
 	while (ft_isdigit(num[i]))
 		i++;
 	if ((i - sign) < 1 || i != ft_strlen(num))

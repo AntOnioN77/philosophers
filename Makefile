@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 LFLAGS = -lpthread
 
-SOURCES = create_mutexes.c init_philosophers.c observer.c parse_args.c\
+SOURCES = create_mutexes.c init_philosophers.c observer.c\
 philo_routine.c valid_amount_ms.c validate_args.c utils.c ft_lltoa.c main.c
 
 OBJECTS = $(SOURCES:.c=.o)
