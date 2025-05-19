@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 22:11:09 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 11:36:05 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int	is_dead(t_world *world, long long *dead_date_arr, unsigned int i)
 	pthread_mutex_lock(&(world->dead_date_mutex_arr[i]));
 	if (dead_date_arr[i] < time)
 	{
+		world->state_array[i] = THE_END;
 		msg = cmpmsg(world->start_date, time, i + 1, " died\n");
 		if (msg == NULL)
 		{

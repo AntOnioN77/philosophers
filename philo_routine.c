@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/18 15:00:52 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 12:18:32 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,87 +33,86 @@ fflush(NULL);*/
 	}
 }
 
-void *philo_routine(void *sc)
+int take_first_fork(t_scope *scope)
 {
-	t_philo_scope	*scope;
-	unsigned int	eats;
-    long long       start_time;
-
-    //start
-	scope = (t_philo_scope *)sc;
-	eats = 0;
-    start_time = scope->start_date;
-	monitor(scope,  start_time, " is thinking\n");
-	/*if(scope->name % 2 == 0)
+	if(scope->first_fork == NULL)
+		return (1);
+	while(!call_observer(scope->state, scope->mutex_state, scope->name))
+		usleep(RECALL_WAIT);
+	pthread_mutex_lock(scope->first_fork);
+	if(monitor(scope,  scope->start_date, " has taken a fork\n"))
 	{
-		printf("name:%d\n",scope->name);
-		usleep(EVEN_WAIT * scope->argx[NUM_OF_PHILO]);
-	}*/
-	while(1)
-	{
-        //take first fork
-		if(scope->first_fork == NULL)
-			return (sc);
-		while(!call_observer(scope->state, scope->mutex_state, scope->name))
-		{
-	printf("name:%d Is Waiting, state:%d\n",scope->name, *(scope->state));
-	fflush(NULL);
+		pthread_mutex_unlock(scope->first_fork);
+		return (1);
+	}
+	return (0);
+}
 
-			usleep(RECALL_WAIT);
-		}
-	printf("name:%d Is still loving you, state:%d\n",scope->name, *(scope->state));
-	fflush(NULL);
-		pthread_mutex_lock(scope->first_fork);
-		if(monitor(scope,  start_time, " has taken a fork\n"))
-		{
-			pthread_mutex_unlock(scope->first_fork);
-//printf("monitor fallo en philo_routine (l66)");
-//fflush(NULL);
-			return (sc);
-		}
-        //take second fork
-		if(scope->second_fork == NULL)
-		{
-			pthread_mutex_unlock(scope->first_fork);
-			return (sc);
-		}
-		pthread_mutex_lock(scope->second_fork);
-		if(monitor(scope,  start_time, " has taken a fork\n"))
-		{
-			pthread_mutex_unlock(scope->first_fork);
-			pthread_mutex_unlock(scope->second_fork);
-			return (sc);
-		}
-        //and eat
-		pthread_mutex_lock(scope->dead_date_mutex);		 		// -ML
+int	take_second_fork(t_scope *scope)
+{
+	if(scope->second_fork == NULL)
+	{
+		pthread_mutex_unlock(scope->first_fork);
+		return (1);
+	}
+	pthread_mutex_lock(scope->second_fork);
+	if(monitor(scope,  scope->start_date, " has taken a fork\n"))
+	{
+		pthread_mutex_unlock(scope->first_fork);
+		pthread_mutex_unlock(scope->second_fork);
+		return (1);
+	}
+	return (0);
+}
+
+int	and_eat(t_scope *scope, unsigned int *eats)
+{
+		pthread_mutex_lock(scope->dead_date_mutex); 		// -ML
         *(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE]);	//
 		pthread_mutex_unlock(scope->dead_date_mutex);      		//-MU
-		if(monitor(scope,  start_time, " is eating\n"))
+		if(monitor(scope,  scope->start_date, " is eating\n"))
 		{
 			pthread_mutex_unlock(scope->first_fork);
 			pthread_mutex_unlock(scope->second_fork);
-			return (sc);
+			return (1);
 		}
 		pthread_mutex_lock(scope->mutex_state);
 		*(scope->state) = EATING;
 		pthread_mutex_unlock(scope->mutex_state);
-		eats++;
+		*eats = *eats + 1;
 		usleep(scope->argx[TIME_TO_EAT] * 1000);
 		pthread_mutex_unlock(scope->first_fork);
 		pthread_mutex_unlock(scope->second_fork);
-		if(scope->argx[MAX_EATS] != 0 && eats >= scope->argx[MAX_EATS])
+		if(scope->argx[MAX_EATS] != 0 && *eats >= scope->argx[MAX_EATS])
 		{
 			pthread_mutex_lock(scope->mutex_state);
 			*(scope->state)= THE_END;
 			pthread_mutex_unlock(scope->mutex_state);
-			return (sc);
+			return (1);
 		}
-        //duerme y piensa
-		if(monitor(scope,  start_time, " is sleeping\n"))
+		return (0);
+}
+
+void *philo_routine(void *sc)
+{
+	t_scope	*scope;
+	unsigned int	eats;
+
+	scope = (t_scope *)sc;
+	eats = 0;
+	monitor(scope,  scope->start_date, " is thinking\n");
+	while(1)
+	{
+        if (take_first_fork(scope))
+			return (sc);
+        if (take_second_fork(scope))
+			return (sc);
+        if (and_eat(scope, &eats))
+			return (sc);
+		if(monitor(scope,  scope->start_date, " is sleeping\n"))
 			return (sc);
 		usleep(scope->argx[TIME_TO_SLEEP] * 1000);
-
-		if(monitor(scope,  start_time, " is thinking\n"))
+		if(monitor(scope,  scope->start_date, " is thinking\n"))
 			return (sc);
 		usleep(scope->tinking_time);
 	}
@@ -129,7 +128,7 @@ long long	get_time_ms(void)
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int	monitor(t_philo_scope *scp, long long start, char *msg)
+int	monitor(t_scope *scp, long long start, char *msg)
 {
 	long long		time;
 	int				good_bye;

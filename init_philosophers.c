@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/15 21:18:06 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/19 12:02:46 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	reserve_memory(t_world *world, unsigned int num_of_philos)
 int	init_one_philo(t_world *world, unsigned int philo_n)
 {
 	pthread_t 		*new_philo;
-	t_philo_scope	*scope;
+	t_scope	*scope;
 
 	philo_n--;
 
@@ -95,7 +95,7 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 
 //cambiar nombre, establece dos cosas, que tenedor usara primero pero tambien, si al inicio tendra permiso para comer.
 //TODO abdtraer la logica izquierda derecha y resolver todo lo relativo a los tenedores en esta funcion
-void	stablish_order_forks(unsigned int name, t_philo_scope *scope, pthread_mutex_t *left,
+void	stablish_order_forks(unsigned int name, t_scope *scope, pthread_mutex_t *left,
 	pthread_mutex_t *rigth)
 {
 	if ((name % 2) == 0)
@@ -112,13 +112,13 @@ void	stablish_order_forks(unsigned int name, t_philo_scope *scope, pthread_mutex
 	}
 }
 
-t_philo_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
+t_scope	*scoop_of_this_philo(t_world *world, unsigned int philo_n)
 {
-	t_philo_scope	*scope;
+	t_scope	*scope;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*rigth;
 
-	scope = malloc(sizeof(t_philo_scope));
+	scope = malloc(sizeof(t_scope));
 	if (scope == NULL)
 		return (NULL);
 	scope->name = philo_n + 1;
