@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:49:28 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 14:33:33 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/20 10:26:08 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 
 	philo_n--;
 
-	world->dead_date_arr[philo_n] = (world->argx[TIME_TO_DIE]) + world->start_date;
+	world->dead_date_arr[philo_n] = (world->argx[TIME_TO_DIE])
+		+ world->start_date;
 	scope = scoop_of_this_philo(world, philo_n);
 	if (scope == NULL)
 		return (1);
@@ -83,7 +84,6 @@ int	init_one_philo(t_world *world, unsigned int philo_n)
 	return (0);
 
 }
-
 
 //cambiar nombre, establece dos cosas, que tenedor usara primero pero tambien, si al inicio tendra permiso para comer.
 //TODO abdtraer la logica izquierda derecha y resolver todo lo relativo a los tenedores en esta funcion

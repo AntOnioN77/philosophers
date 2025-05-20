@@ -6,11 +6,31 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:40:31 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 15:42:27 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/20 09:39:49 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+static int	validate_philosopher_count(char *arg);
+static int	validate_time_args(char **argv);
+static int	validate_optional_arg(int argc, char **argv);
+
+int	validate_args(int argc, char **argv)
+{
+	if (argc < 5 || argc > 6)
+	{
+		printf("Error: Invalid number of arguments.\n");
+		return (1);
+	}
+	if (validate_philosopher_count(argv[1]))
+		return (1);
+	if (validate_time_args(argv))
+		return (1);
+	if (validate_optional_arg(argc, argv))
+		return (1);
+	return (0);
+}
 
 static int	validate_philosopher_count(char *arg)
 {
@@ -56,18 +76,3 @@ static int	validate_optional_arg(int argc, char **argv)
 	return (0);
 }
 
-int	validate_args(int argc, char **argv)
-{
-	if (argc < 5 || argc > 6)
-	{
-		printf("Error: Invalid number of arguments.\n");
-		return (1);
-	}
-	if (validate_philosopher_count(argv[1]))
-		return (1);
-	if (validate_time_args(argv))
-		return (1);
-	if (validate_optional_arg(argc, argv))
-		return (1);
-	return (0);
-}

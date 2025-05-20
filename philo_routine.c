@@ -6,89 +6,17 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 23:05:55 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 13:40:28 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/20 09:28:53 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-
-t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state,
-		unsigned int name)
-{
-	name = name + 0;
-	pthread_mutex_lock(mutex_state);
-	if (*state == YES_EAT || *state == THE_END)
-	{
-		pthread_mutex_unlock(mutex_state);
-		return (TRUE);
-	}
-	else
-	{
-		pthread_mutex_unlock(mutex_state);
-		return (FALSE);
-	}
-}
-
-int	take_first_fork(t_scope *scope)
-{
-	if (scope->first_fork == NULL)
-		return (1);
-	while (!call_observer(scope->state, scope->mutex_state, scope->name))
-		usleep(RECALL_WAIT);
-	pthread_mutex_lock(scope->first_fork);
-	if (monitor(scope, scope->start_date, " has taken a fork\n"))
-	{
-		pthread_mutex_unlock(scope->first_fork);
-		return (1);
-	}
-	return (0);
-}
-
-int	take_second_fork(t_scope *scope)
-{
-	if (scope->second_fork == NULL)
-	{
-		pthread_mutex_unlock(scope->first_fork);
-		return (1);
-	}
-	pthread_mutex_lock(scope->second_fork);
-	if (monitor(scope, scope->start_date, " has taken a fork\n"))
-	{
-		pthread_mutex_unlock(scope->first_fork);
-		pthread_mutex_unlock(scope->second_fork);
-		return (1);
-	}
-	return (0);
-}
-
-int	and_eat(t_scope *scope, unsigned int *eats)
-{
-	pthread_mutex_lock(scope->dead_date_mutex);
-	*(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE]);
-	pthread_mutex_unlock(scope->dead_date_mutex);
-	if (monitor(scope, scope->start_date, " is eating\n"))
-	{
-		pthread_mutex_unlock(scope->first_fork);
-		pthread_mutex_unlock(scope->second_fork);
-		return (1);
-	}
-	pthread_mutex_lock(scope->mutex_state);
-	*(scope->state) = EATING;
-	pthread_mutex_unlock(scope->mutex_state);
-	*eats = *eats + 1;
-	usleep(scope->argx[TIME_TO_EAT] * 1000);
-	pthread_mutex_unlock(scope->first_fork);
-	pthread_mutex_unlock(scope->second_fork);
-	if (scope->argx[MAX_EATS] != 0 && *eats >= scope->argx[MAX_EATS])
-	{
-		pthread_mutex_lock(scope->mutex_state);
-		*(scope->state) = THE_END;
-		pthread_mutex_unlock(scope->mutex_state);
-		return (1);
-	}
-	return (0);
-}
+static int		take_first_fork(t_scope *scope);
+static	t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state,
+					unsigned int name);
+static int		take_second_fork(t_scope *scope);
+static int		and_eat(t_scope *scope, unsigned int *eats);
 
 void	*philo_routine(void *sc)
 {
@@ -116,80 +44,79 @@ void	*philo_routine(void *sc)
 	return (sc);
 }
 
-
-long long	get_time_ms(void)
+static int	take_first_fork(t_scope *scope)
 {
-	struct timeval	tv;    
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
-int	monitor(t_scope *scp, long long start, char *msg)
-{
-	long long		time;
-	int				good_bye;
-	char			*full_msg;
-
-	time = get_time_ms();
-	good_bye = 0;
-
-	pthread_mutex_lock(scp->mutex_state);
-	if (*(scp->state) == THE_END)
-		good_bye = 1;
-	pthread_mutex_unlock(scp->mutex_state);
-
-	pthread_mutex_lock(scp->dead_date_mutex);
-	if (time > *(scp->dead_date))
-		good_bye = 1;
-	pthread_mutex_unlock(scp->dead_date_mutex);
-
-	if (good_bye)
+	if (scope->first_fork == NULL)
 		return (1);
-	full_msg = cmpmsg(start, time, scp->name, msg);
-	if (!full_msg)
+	while (!call_observer(scope->state, scope->mutex_state, scope->name))
+		usleep(RECALL_WAIT);
+	pthread_mutex_lock(scope->first_fork);
+	if (monitor(scope, scope->start_date, " has taken a fork\n"))
+	{
+		pthread_mutex_unlock(scope->first_fork);
 		return (1);
-	ft_putstr_fd(full_msg, 1);
-	free(full_msg);
+	}
 	return (0);
 }
 
-
-/*Une str_a y str_b creando un nuevo string y lo almacena en result.
-Si no pudo crearlo libera str_a y str_b y retorna null*/
-char	*join_check(char *str_a, char *str_b, char **result)
+static t_bool	call_observer(t_states *state, pthread_mutex_t *mutex_state,
+		unsigned int name)
 {
-	*result = ft_strjoin(str_a, str_b);
-	if (*result == NULL)
+	name = name + 0;
+	pthread_mutex_lock(mutex_state);
+	if (*state == YES_EAT || *state == THE_END)
 	{
-		free(str_a);
-		free(str_b);
-		return (NULL);
+		pthread_mutex_unlock(mutex_state);
+		return (TRUE);
 	}
-	return (*result);
+	else
+	{
+		pthread_mutex_unlock(mutex_state);
+		return (FALSE);
+	}
 }
 
-char	*cmpmsg(long long start, long long time, unsigned int n, char *msg)
+static int	take_second_fork(t_scope *scope)
 {
-	char	*full_msg;
-	char	*aux;
-	char	*name;
+	if (scope->second_fork == NULL)
+	{
+		pthread_mutex_unlock(scope->first_fork);
+		return (1);
+	}
+	pthread_mutex_lock(scope->second_fork);
+	if (monitor(scope, scope->start_date, " has taken a fork\n"))
+	{
+		pthread_mutex_unlock(scope->first_fork);
+		pthread_mutex_unlock(scope->second_fork);
+		return (1);
+	}
+	return (0);
+}
 
-	time = time - start;
-	aux = ft_lltoa(time);
-	if (aux == NULL)
-		return (NULL);
-	if (!join_check(aux, " ", &(full_msg)))
-		return (NULL);
-	free(aux);
-	name = ft_lltoa(n);
-	if (name == NULL)
-		return (NULL);
-	if (!join_check(full_msg, name, &(aux)))
-		return (NULL);
-	free(full_msg);
-	free(name);
-	full_msg = ft_strjoin(aux, msg);
-	free(aux);
-	return (full_msg);
+static int	and_eat(t_scope *scope, unsigned int *eats)
+{
+	pthread_mutex_lock(scope->dead_date_mutex);
+	*(scope->dead_date) = get_time_ms() + (scope->argx[TIME_TO_DIE]);
+	pthread_mutex_unlock(scope->dead_date_mutex);
+	if (monitor(scope, scope->start_date, " is eating\n"))
+	{
+		pthread_mutex_unlock(scope->first_fork);
+		pthread_mutex_unlock(scope->second_fork);
+		return (1);
+	}
+	pthread_mutex_lock(scope->mutex_state);
+	*(scope->state) = EATING;
+	pthread_mutex_unlock(scope->mutex_state);
+	*eats = *eats + 1;
+	usleep(scope->argx[TIME_TO_EAT] * 1000);
+	pthread_mutex_unlock(scope->first_fork);
+	pthread_mutex_unlock(scope->second_fork);
+	if (scope->argx[MAX_EATS] != 0 && *eats >= scope->argx[MAX_EATS])
+	{
+		pthread_mutex_lock(scope->mutex_state);
+		*(scope->state) = THE_END;
+		pthread_mutex_unlock(scope->mutex_state);
+		return (1);
+	}
+	return (0);
 }

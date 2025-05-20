@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 14:43:48 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/20 10:23:52 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,9 @@ t_scope			*scoop_of_this_philo(t_world *world,
 pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n,
 					unsigned int total_philo);
 size_t			ft_strlen(const char *s);
-
+char			*join_check(char *str_a, char *str_b, char **result);
+void			end_all_philos(pthread_mutex_t *mutex_state_array,
+					t_states *state_array, unsigned int num_of_philos);
+void			stablish_order(int *arr, int prev, int this, int next);
+int				free_simulated_world(int sim_ret, t_world *world);
 #endif
