@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:40:31 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/20 09:39:49 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:29:14 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,3 @@ static int	validate_optional_arg(int argc, char **argv)
 	}
 	return (0);
 }
-

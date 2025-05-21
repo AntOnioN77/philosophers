@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:23:45 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/20 09:49:42 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:28:26 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,14 @@ int	monitor(t_scope *scp, long long start, char *msg)
 
 	time = get_time_ms();
 	good_bye = 0;
-
 	pthread_mutex_lock(scp->mutex_state);
 	if (*(scp->state) == THE_END)
 		good_bye = 1;
 	pthread_mutex_unlock(scp->mutex_state);
-
 	pthread_mutex_lock(scp->dead_date_mutex);
 	if (time > *(scp->dead_date))
 		good_bye = 1;
 	pthread_mutex_unlock(scp->dead_date_mutex);
-
 	if (good_bye)
 		return (1);
 	full_msg = cmpmsg(start, time, scp->name, msg);
@@ -71,8 +68,12 @@ char	*cmpmsg(long long start, long long time, unsigned int n, char *msg)
 	aux = ft_lltoa(time);
 	if (aux == NULL)
 		return (NULL);
-	if (!join_check(aux, " ", &(full_msg)))
+	full_msg = ft_strjoin(aux, " ");
+	if (!full_msg)
+	{
+		free(aux);
 		return (NULL);
+	}
 	free(aux);
 	name = ft_lltoa(n);
 	if (name == NULL)

@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:54:16 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/20 10:05:32 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:27:48 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	check_survivors(t_world *world, long long *dead_date_arr)
 	while (i < world->argx[NUM_OF_PHILO])
 	{
 		pthread_mutex_lock(&(world->mutex_state_array[i]));
-		if (world->state_array[i] !=THE_END)
+		if (world->state_array[i] != THE_END)
 			dead += is_dead(world, dead_date_arr, i);
 		else
 			ended++;
@@ -100,7 +100,7 @@ static void	neighborhood_update(pthread_mutex_t *mutex_state_array,
 
 	prev = ((this + num_of_philo) - 1) % num_of_philo;
 	next = (this + 1) % num_of_philo;
-	stablish_order(idx, prev, this, next);
+	establish_order(idx, prev, this, next);
 	if (idx[0] != idx[1] && idx[0] != idx[2])
 		pthread_mutex_lock(&(mutex_state_array[idx[0]]));
 	if (idx[1] != idx[2])

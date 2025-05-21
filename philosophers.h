@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:55:51 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/20 10:23:52 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:25:09 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ typedef int	t_bool;
 
 # define TEST 0
 # define DELAY_FACTOR 3
-# define OBSERVER_PAUSE 5//100//1//5
-# define RECALL_WAIT 500//20
+# define OBSERVER_PAUSE 5
+# define RECALL_WAIT 500
 # define FALSE 0
 # define TRUE 1
 # define ODD 1
@@ -98,7 +98,7 @@ long long		get_time_ms(void);
 void			destroy_arr_mutex(pthread_mutex_t forks[], unsigned int count);
 t_bool			valid_amount_ms(char *num);
 t_bool			is_in_bounds(char *num);
-t_scope			*scoop_of_this_philo(t_world *world,
+t_scope			*scope_of_this_philo(t_world *world,
 					unsigned int philo_n);
 pthread_mutex_t	*find_left_fork(pthread_mutex_t *forks, int philo_n,
 					unsigned int total_philo);
@@ -106,6 +106,6 @@ size_t			ft_strlen(const char *s);
 char			*join_check(char *str_a, char *str_b, char **result);
 void			end_all_philos(pthread_mutex_t *mutex_state_array,
 					t_states *state_array, unsigned int num_of_philos);
-void			stablish_order(int *arr, int prev, int this, int next);
+void			establish_order(int *arr, int prev, int this, int next);
 int				free_simulated_world(int sim_ret, t_world *world);
 #endif

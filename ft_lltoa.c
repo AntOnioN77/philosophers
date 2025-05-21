@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 13:09:18 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/19 14:31:13 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:26:39 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,33 +74,3 @@ char	*ft_lltoa(long long n)
 	}
 	return (result);
 }
-
-/*
-#include <stdio.h>
-int	main(void)
-{
-    // Casos de prueba
-    long long test_cases[] = {0, 1, 42, LLONG_MAX, LLONG_MIN, 10,
-		100, 1000}; // Incluye el máximo valor de unsigned int
-    size_t num_cases = sizeof(test_cases) / sizeof(test_cases[0]);
-    char *result;
-
-    printf("Testing ft_uitoa:\n");
-    for (size_t i = 0; i < num_cases; i++)
-    {
-        result = ft_itoa(test_cases[i]);
-        if (result != NULL)
-        {
-            printf("Input: %lld -> Output: %s\n", test_cases[i], result);
-            free(result); // Liberar la memoria asignada por ft_uitoa
-        }
-        else
-        {
-            printf("Input: %lld -> Output: NULL (Memory allocation failed)\n",
-			test_cases[i]);
-        }
-    }
-
-    return (0);
-}
-*/

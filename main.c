@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/20 10:19:43 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:26:10 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[])
 	time_to_die = (long) argx[TIME_TO_DIE];
 	total = time_to_die - time_to_eat - time_to_sleep;
 	if (total - delay > 0)
-		*tinking_time = (unsigned int) ((total - delay) * 1000);
+		*tinking_time = (unsigned int)((total - delay) * 1000);
 	else
 		*tinking_time = 0;
 }
@@ -67,7 +67,7 @@ int	parse_args(int argc, char *argv[], unsigned int argx[])
 	i = 0;
 	while (i < 4)
 	{
-		argx[i] = ft_atol(argv[i+1]);
+		argx[i] = ft_atol(argv[i + 1]);
 		i++;
 	}
 	if (argc == 6)

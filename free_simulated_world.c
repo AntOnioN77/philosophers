@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:20:15 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/20 10:22:49 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:17:35 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	free_simulated_world(int sim_ret, t_world *world)
 	{
 		pthread_join(world->observer, NULL);
 		thread_join_all(world->philosophers, world->argx[NUM_OF_PHILO]);
-
 		free(world->philosophers);
 		free(world->dead_date_arr);
 		free(world->state_array);

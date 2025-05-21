@@ -6,7 +6,7 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:56:48 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/20 09:58:09 by antofern         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:42:01 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	end_all_philos(pthread_mutex_t *mutex_state_array,
 	}
 }
 
-void	stablish_order(int *arr, int prev, int this, int next)
+void	establish_order(int *arr, int prev, int this, int next)
 {
 	int	i;
 	int	j;
