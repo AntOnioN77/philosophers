@@ -56,8 +56,8 @@ static int	validate_time_args(char **argv)
 		if (!valid_amount_ms(argv[i]))
 		{
 			printf("Error: %dº Argument is not a valid number.\n", i);
-			printf("MAX:4294967 (useconds_t MAX/1000)\nMIN:0\nDo not use letters,\
-				spaces, commas or dots.\n");
+			printf("MAX:4294967 (useconds_t MAX/1000)\nMIN:0\nDo not use ");
+			printf("letters, spaces, commas or dots.\n");
 			return (1);
 		}
 		i++;

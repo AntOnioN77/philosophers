@@ -13,7 +13,8 @@
 #include "philosophers.h"
 
 int		simulation(t_world *world);
-void	agree_time_tinking(unsigned int *tinking_time, unsigned int argx[]);
+void		agree_time_tinking(unsigned int *tinking_time, unsigned int argx[]);
+static void	patch_rip(unsigned int argx[]);
 
 int	main(int argc, char **argv)
 {
@@ -72,5 +73,20 @@ int	parse_args(int argc, char *argv[], unsigned int argx[])
 	}
 	if (argc == 6)
 		argx[4] = ft_atol(argv[5]);
+	patch_rip(argx);
 	return (0);
 }
+
+static void	patch_rip(unsigned int argx[])
+{
+	if (argx[TIME_TO_DIE] < argx[TIME_TO_EAT])
+	{
+		argx[TIME_TO_EAT] = argx[TIME_TO_DIE] + (DELAY_FACTOR * argx[NUM_OF_PHILO]);
+		argx[TIME_TO_SLEEP] = DELAY_FACTOR * argx[NUM_OF_PHILO];
+
+	}
+	else if (argx[TIME_TO_DIE] < argx[TIME_TO_EAT] + argx[TIME_TO_SLEEP])
+		argx[TIME_TO_SLEEP] = (argx[TIME_TO_DIE] - argx[TIME_TO_EAT])
+			+ (argx[NUM_OF_PHILO] * DELAY_FACTOR);
+}
+
