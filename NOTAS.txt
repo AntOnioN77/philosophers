@@ -1,3 +1,0 @@
-usecnds_t es alias del tipo "unsigned int" 
-
-NO LIBFT
