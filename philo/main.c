@@ -6,13 +6,13 @@
 /*   By: antofern <antofern@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:31:33 by antofern          #+#    #+#             */
-/*   Updated: 2025/05/21 13:26:10 by antofern         ###   ########.fr       */
+/*   Updated: 2025/06/04 14:51:11 by antofern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int		simulation(t_world *world);
+int			simulation(t_world *world);
 void		agree_time_tinking(unsigned int *tinking_time, unsigned int argx[]);
 static void	patch_rip(unsigned int argx[]);
 
@@ -81,12 +81,11 @@ static void	patch_rip(unsigned int argx[])
 {
 	if (argx[TIME_TO_DIE] < argx[TIME_TO_EAT])
 	{
-		argx[TIME_TO_EAT] = argx[TIME_TO_DIE] + (DELAY_FACTOR * argx[NUM_OF_PHILO]);
+		argx[TIME_TO_EAT] = argx[TIME_TO_DIE]
+			+ (DELAY_FACTOR * argx[NUM_OF_PHILO]);
 		argx[TIME_TO_SLEEP] = DELAY_FACTOR * argx[NUM_OF_PHILO];
-
 	}
 	else if (argx[TIME_TO_DIE] < argx[TIME_TO_EAT] + argx[TIME_TO_SLEEP])
 		argx[TIME_TO_SLEEP] = (argx[TIME_TO_DIE] - argx[TIME_TO_EAT])
 			+ (argx[NUM_OF_PHILO] * DELAY_FACTOR);
 }
-
